@@ -17,6 +17,7 @@ import Input from "../../../components/input";
 import Select from "../../../components/select";
 import Spinner from "../../../components/Spinner";
 import Swal from "sweetalert2";
+import { onAlert } from "../../../utils/onAlert";
 
 const AreaCreate = () => {
   const params = useParams();
@@ -38,13 +39,13 @@ const AreaCreate = () => {
     enabled: param,
   });
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, fetchStatus } = useQuery({
     queryKey: ["getArea", params.id],
     queryFn: getArea,
     enabled: param,
   });
 
-  if (isLoadingE || isLoadingA || isLoading || isLoadingU)
+  if (isLoadingE || isLoadingA || isLoading || isLoadingU ||  fetchStatus == "fetching")
     return <Spinner />;
 
   return (
@@ -118,16 +119,7 @@ function Form({ defaultValues, dataE, dataA, dataU, update }) {
 
 
   useEffect(()=>{
-    console.log(Object.keys(errors).length);
-    Object.keys(errors).length>0&&
-    Swal.fire({
-      icon: 'error',
-      iconHtml:'!',
-      title: '¡Campos vacíos!',
-      text: 'Para continuar completa todos los campos',
-      confirmButtonText: 'OK',
-      confirmButtonColor:'#6b1e34'
-    });
+    onAlert(errors);
   },[errors]);
 
   return (
@@ -141,8 +133,8 @@ function Form({ defaultValues, dataE, dataA, dataU, update }) {
         <Input required register={register} errors={errors} disabled={isEditing} name="clave_area" label="Clave del área" maxLength={8}/>
         <Input required register={register} errors={errors} disabled={isEditing} name="codigo_gral" label="Clave general" maxLength={8}/>
         <Input required register={register} errors={errors} disabled={isEditing} name="codigo_aux" label="Clave auxiliar" maxLength={8}/>
-        <Input required register={register} errors={errors} disabled={isEditing} name="telefono" label="Teléfono" maxLength={10}/>
-        <Input register={register} errors={errors} disabled={isEditing} name="ext" label="Extensión" maxLength={5} valueAsNumber/>
+        <Input required register={register} errors={errors} disabled={isEditing} name="telefono" label="Teléfono" maxLength={10} isNumber/>
+        <Input register={register} errors={errors} disabled={isEditing} name="ext" label="Extensión" maxLength={5} isNumber/>
         <Input required register={register} errors={errors} disabled={isEditing} name="calle" label="Calle" maxLength={30}/>
         <Input required register={register} errors={errors} disabled={isEditing} name="no_ext" label="Número exterior" maxLength={5}/>
         <Input register={register} errors={errors} disabled={isEditing} name="no_int" label="Número Interior" maxLength={5}/>
@@ -155,14 +147,14 @@ function Form({ defaultValues, dataE, dataA, dataU, update }) {
           disabled={isEditing}
           name="id_entidad"
           label="Entidad Federativa"
-          valueAsNumber
+          valueAsNumber 
           data={dataE.data}
           renderItem={x=>
             <option key={x.id} value={x.id}>
               {x.entidad}
             </option>}
         />
-        <Input required register={register} errors={errors} disabled={isEditing} name="cp" label="Codigo Postal" maxLength={5} valueAsNumber/>
+        <Input required register={register} errors={errors} disabled={isEditing} name="cp" label="Codigo Postal" maxLength={5} valueAsNumber isNumber/>
         {defaultValues?.id && (
           <Select 
             required
@@ -171,7 +163,7 @@ function Form({ defaultValues, dataE, dataA, dataU, update }) {
             disabled={isEditing}
             name="id_titular"
             label="Titual del área"
-            valueAsNumber
+            valueAsNumber 
             data={dataU.data}
             renderItem={x=>
               <option
@@ -190,7 +182,7 @@ function Form({ defaultValues, dataE, dataA, dataU, update }) {
           disabled={isEditing}
           name="id_padre"
           label="Area que depende"
-          valueAsNumber
+          valueAsNumber 
           data={dataA.data}
           renderItem={(x) => (
             <option

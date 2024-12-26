@@ -7,8 +7,11 @@ import Titulo from "../../../components/Titulo";
 import FormUsuarios from "../../../components/configuracion/usuarios/FormUsuarios";
 import { useMutation } from "@tanstack/react-query";
 import { crearUsuario } from "../../../api/configuracion/ApiUsers";
+import AlertSuccess from "../../../components/AlertSuccess";
+import { onError } from "../../../utils/onError";
 
 const UsuarioCreate = () => {
+  const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
   
   const initialValues = {
@@ -22,15 +25,15 @@ const UsuarioCreate = () => {
     estado: "",
   };
 
-  const { register, handleSubmit, formState: { errors }} = useForm({ defaultValues: initialValues});
+  const { register, handleSubmit, formState: { errors }, setError} = useForm({ defaultValues: initialValues});
 
   const { mutate } = useMutation({
     mutationFn: crearUsuario,
     onError: (error) => {
-      console.log(error);
+      onError(error, setError);
     },
     onSuccess: (data) => {
-      navigate("/configuracion/usuarios/listado");
+      setShowSuccess(true);
     }
   })
 
@@ -39,6 +42,7 @@ const UsuarioCreate = () => {
   return (
     <>
       <div>
+        { showSuccess && <AlertSuccess route='/configuracion/usuarios/listado' /> }
         <Breadcrumb
           items={[
             { href: "/configuracion/menu", text: "CONFIGURACIÓN" },

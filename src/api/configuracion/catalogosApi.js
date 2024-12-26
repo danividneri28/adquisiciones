@@ -8,3 +8,13 @@ export async function getEntidad_federativa() {
     return error.response.data;
   }
 }
+
+export async function getPilares() {
+  try {
+    const { data } = await api("/pilares");
+    return data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+

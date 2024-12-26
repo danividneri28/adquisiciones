@@ -1,12 +1,42 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Breadcrumb from '../../../../../components/Breadcrumb'
 import Titulo from '../../../../../components/Titulo'
 import FormProyecto from '../../../../../components/configuracion/catalogosProgramaticos/FormProyecto'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { crearProyecto } from '../../../../../api/configuracion/catalogos/programaticos/ProyectoApi'
+import AlertSuccess from '../../../../../components/AlertSuccess'
+import { useMutation } from '@tanstack/react-query'
+import { onError } from '../../../../../utils/onError'
 
 const NuevoProyecto = () => {
+    const [showSuccess, setShowSuccess] = useState(false);
+
+    const initialValues = {
+        nombre: "",
+        codigo: "",
+        descripcion: "",
+        id_subprograma: "",
+        id_unidad_responsable: "",
+        estado: "",
+    };
+
+    const { register, handleSubmit, formState: { errors }, setError, control } = useForm({ defaultValues: initialValues });
+
+    const { mutate } = useMutation({
+        mutationFn: crearProyecto,
+        onError: (error) => {
+          onError(error, setError);
+        },
+        onSuccess: (data) => {
+          setShowSuccess(true);
+        }
+    })
+
+    const handleForm = (formData) => mutate(formData);
     return (
         <>
+            { showSuccess && <AlertSuccess route='/configuracion/catalogos/programaticos/proyecto' /> }
             <Breadcrumb
                 items={[
                     { href: "/home", text: "CONFIGURACIÓN" },
@@ -24,9 +54,17 @@ const NuevoProyecto = () => {
                     <h3 className="text-white font-bold">CREAR NUEVO PROYECTO</h3>
                 </div>
 
-                <form className="flex flex-col p-4 space-y-2 bg-customRed2 mt-1">
+                <form 
+                    className="flex flex-col p-4 space-y-2 bg-customRed2 mt-1"
+                    onSubmit={handleSubmit(handleForm)}
+                    noValidate
+                >
                     
-                    <FormProyecto />
+                    <FormProyecto 
+                        register={register}
+                        errors={errors}
+                        control={control}
+                    />
 
                     <div className="flex justify-end">
                         <Link

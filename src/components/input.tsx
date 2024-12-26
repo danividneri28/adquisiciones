@@ -7,21 +7,23 @@ interface CustomInputProps
     HTMLInputElement
   > {
   name: string;
-  maxLength?: number;
   minLength?: number;
   max?: number;
   valueAsNumber?: boolean;
+  isNumber?: boolean;
   label?: string;
   required?: boolean;
   errors: object;
+  classNameContainer?:string;
   register: UseFormRegister<any>;
 }
 const Input = ({
+  classNameContainer,
   label = "Campo",
-  maxLength,
   minLength,
   max,
   valueAsNumber,
+  isNumber,
   name,
   required = false,
   errors,
@@ -29,19 +31,18 @@ const Input = ({
   ...props
 }: CustomInputProps) => {
   return (
-    <div>
+    <div className={classNameContainer}>
       <label className="block text-sm font-medium text-white">
         {(required ? "*" : "") + label}:
       </label>
       <input
-        maxLength={maxLength}
+        {...props}
         className={`mt-1 block w-full rounded-md ${
           errors[name] ? "border-2" : ""
-        } border-red-500 shadow-sm focus:ring-black focus:border-ring-black p-3 sm:text-sm`}
-        {...props}
+        } border-red-500 shadow-sm focus:ring-black focus:border-ring-black p-3 sm:text-sm  ${props.className}`}
         {...register(name, {
           valueAsNumber,
-          validate: valueAsNumber
+          validate: isNumber
             ? (value) => !isNaN(value) || "Debe ser un número válido"
             : undefined,
           required: { value: required, message: "Campo vacío" },

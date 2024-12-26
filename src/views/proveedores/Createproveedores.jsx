@@ -5,6 +5,7 @@ import Titulo from "../../components/Titulo";
 import CustomTable from "../../components/CustomTable";
 import registroProveedor from "../../assets/images/funciones/proveedores/registro-proveedor.png";
 import consultaProveedores from "../../assets/images/funciones/proveedores/Consulta_de_proveedores.png";
+import Regresar from "../../components/Regresar";
 // import Nuevarequisicion from "../../../assets/images/funciones/solicitudRequisicion/Nuevarequisicion.png"; // Importar imágenes
 // import Historial from "../../../assets/images/funciones/solicitudRequisicion/historial.png"; // Importar imágenes
 
@@ -122,12 +123,8 @@ export default function Createproveedores() {
                     },
                 ]}
             />
-            <a
-                href="/funciones"
-                className="block w-24 h-10 pl-2 mt-5 font-bold text-xl text-black cursor-pointer"
-            >
-                REGRESAR
-            </a>
+            <Regresar enlace="/funciones" />
+                
         <Titulo text={"REGISTROS DE PROVEEDORES"} />
             <div>
                 <div className="flex justify-between items-center">

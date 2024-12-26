@@ -1,11 +1,42 @@
 import { Link } from "react-router-dom";
 import Breadcrumb from "../../../../../components/Breadcrumb";
 import Titulo from "../../../../../components/Titulo";
+import { useMutation } from "@tanstack/react-query";
+import { onError } from "../../../../../utils/onError";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { createFuenteFinanciamiento } from "../../../../../api/configuracion/ApiFinanciamiento";
+import AlertSuccess from "../../../../../components/AlertSuccess";
+import { FormFinanciamiento } from "../../../../../components/configuracion/fuenteFinanciamiento/FormFinanciamiento";
 
 const FuenteFinanciamientoCreate = () => {
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const initialValues = {
+    nombre: "",
+    descripcion: "",
+    codigo: "",
+    estado: "",
+  };
+
+  const { register, handleSubmit, formState: { errors }, setError} = useForm({ defaultValues: initialValues });
+
+  const { mutate } = useMutation({
+    mutationFn: createFuenteFinanciamiento,
+    onError: (error) => {
+      onError(error, setError);
+    },
+    onSuccess: () => {
+      setShowSuccess(true);
+    },
+  });
+
+  const handleForm = (formData) => mutate(formData);
+
   return (
     <>
       <div>
+        { showSuccess && ( <AlertSuccess route="/configuracion/catalogos/presupuestales/FuenteFinanciamiento" /> )}
         <Breadcrumb
           items={[
             { href: "/configuracion/menu", text: "CONFIGURACIÓN" },
@@ -22,89 +53,27 @@ const FuenteFinanciamientoCreate = () => {
           ]}
         />
 
-        <Titulo text={"FUENTES DE FINANCIAMIENTO"} className="mt-14"/>
+        <Titulo text={"FUENTES DE FINANCIAMIENTO"} className="mt-14" />
         <div className="bg-gray-100  mt-8 rounded-lg">
           <div
             className="rounded p-3 mb-1"
             style={{ backgroundColor: "#956876" }}
           >
             <h3 className="text-white font-bold uppercase text-xl">
-            NUEVA FUENTE DE FINANCIAMIENTO
+              NUEVA FUENTE DE FINANCIAMIENTO
             </h3>
           </div>
           <form
             className="w-full p-6 rounded-lg"
             style={{ backgroundColor: "#956876" }}
+            onSubmit={handleSubmit(handleForm)}
+            noValidate
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
-              <div className="col-span-full">
-                <label className="block text-sm font-medium text-white">
-                  *Tipo de ingreso local o federal:
-                </label>
-                <input
-                  type="text"
-                  name="nombreArea"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-black focus:border-ring-black p-3 sm:text-sm"
-                  required
-                />
-              </div>
+            <FormFinanciamiento 
+              register={register} 
+              errors={errors} 
+            />
 
-              <div className="col-span-full">
-                <label className="block text-sm font-medium text-white">
-                  *Descripción:
-                </label>
-                <textarea
-                  type="text"
-                  name="descripcion"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-black focus:border-ring-black p-3"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-white">
-                  *Codigo de fuente de financiamiento:
-                </label>
-
-                <select
-                  name="entidadFederativa"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-black focus:border-ring-black p-3 sm:text-sm"
-                  required
-                >
-                  <option value="" hidden>
-                    Selecciona fuente de financiamiento
-                  </option>
-                  <option value="1000">1000</option>
-                  <option value="2000">2000</option>
-                  <option value="3000">3000</option>
-                </select>
-              </div>
-              <div className="mt-3">
-                <label className="block text-sm font-medium text-white">
-                  *Estado:
-                </label>
-                <label className="inline-flex items-center">
-                  <input
-                    type="radio"
-                    name="estado"
-                    value="activo"
-                    className="text-blue-500 focus:ring-blue-500"
-                  />
-                  <span className="ml-2 text-white">Activo</span>
-                </label>
-                <label className="inline-flex items-center ml-4">
-                  <input
-                    type="radio"
-                    name="estado"
-                    value="inactivo"
-                    className="text-blue-500 focus:ring-blue-500"
-                  />
-                  <span className="ml-2 text-white">Inactivo</span>
-                </label>
-              </div>
-            </div>
-            <p className="flex justify-end text-sm text-white">
-              *Campos Obligatorios
-            </p>
             <div className="flex justify-end gap-4 mt-4">
               <Link to="/configuracion/catalogos/presupuestales/FuenteFinanciamiento">
                 <button
@@ -116,13 +85,12 @@ const FuenteFinanciamientoCreate = () => {
                 </button>
               </Link>
 
-              <button
+              <input
+                value={"Guardar"}
                 type="submit"
-                className=" text-white px-4 py-2 rounded-md shadow"
+                className=" text-white px-4 py-2 rounded-md shadow bg-customYellow"
                 style={{ backgroundColor: "#bc965c" }}
-              >
-                Guardar
-              </button>
+              />
             </div>
           </form>
         </div>

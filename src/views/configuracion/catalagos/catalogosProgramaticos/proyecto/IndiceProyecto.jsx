@@ -1,12 +1,20 @@
 import React, { useMemo } from 'react'
 import Breadcrumb from '../../../../../components/Breadcrumb'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import Titulo from '../../../../../components/Titulo'
-import imgNuevoProyecto from '../../../../../assets/images/configuracion/programaticos/nuevoProyecto.png'
+import imgNuevoProyecto from '../../../../../assets/images/configuracion/programaticos/nuevoproyecto.png'
 import CustomTable from '../../../../../components/CustomTable'
 import Regresar from '../../../../../components/Regresar'
+import { obtenerProyectos } from '../../../../../api/configuracion/catalogos/programaticos/ProyectoApi'
+import Spinner from '../../../../../components/Spinner'
+import { useQuery } from '@tanstack/react-query'
 
 const IndiceProyecto = () => {
+    const  { data, isLoading, isError } = useQuery({
+        queryKey: ['obtenerProyectos'],
+        queryFn: obtenerProyectos,
+    });
+
     const columns = useMemo(() => [
         {
             accessorKey: "nombre",
@@ -20,13 +28,13 @@ const IndiceProyecto = () => {
             filterFn: "includesStringSensitive",
         },
         {
-            accessorKey: "programa",
+            accessorKey: "id_programa",
             label: "Programa",
             cell: (info) => info.getValue(),
             filterFn: "includesStringSensitive",
         },
         {
-            accessorKey: "subprograma",
+            accessorKey: "id_subprograma",
             label: "Subprograma",
             cell: (info) => info.getValue(),
             filterFn: "includesStringSensitive",
@@ -37,12 +45,12 @@ const IndiceProyecto = () => {
             cell: (info) => (
                 <span
                     className={`px-1 py-1 rounded text-white text-xs ${
-                        info.row.original.estado === "Activa 0"
+                        info.row.original.estado === "Activo"
                             ? "bg-customGreen"
-                            : "bg-customRed"
+                            : "bg-gray-500"
                     }`}
                 >
-                    {info.row.original.estado}
+                    { info.row.original.estado }
                 </span>
             ),
             filterFn: "includesStringSensitive",
@@ -53,7 +61,7 @@ const IndiceProyecto = () => {
             cell: (info) => (
                 <div>
                     <Link
-                        to={`/configuracion/catalogos/programaticos/editar/proyecto/${info.row.original.id}`}
+                        to={`/configuracion/catalogos/programaticos/editar/proyecto/${info.getValue()}`}
                         className="bg-customRed text-white px-2 py-1 rounded text-xs"
                     >
                         Ver/Editar
@@ -64,16 +72,25 @@ const IndiceProyecto = () => {
         }
     ],[] );
 
-    const data = React.useMemo(() => Array.from({ length: 1000 }, (_, i) => ({
-        id: i,
-        nombre: `Nombre ${i}`,
-        codigo: `0${i}`,
-        programa: `Programa ${i}`,
-        subprograma: `Subprograma ${i}`,
-        estado: `Activa ${i}`,
-        acciones: `Ver/Editar`,
-    })), []);
+    const dataTable = useMemo(() => {
+        if (data) {
+            return data.map((item) => {
+                return {
+                    nombre: item.nombre,
+                    codigo: item.codigo_completo,
+                    id_subprograma: item.subprograma.nombre,
+                    id_programa: item.subprograma.programa_presupuestario.nombre_presupuestario,
+                    estado: item.estado,
+                    acciones: item.id,
+                };
+            });
+        }
+        return [];
+    }, [data]);
 
+    if (isLoading) return <Spinner />;
+    if (isError) return <Navigate to="/404" />;
+    
     return (
         <>  
             <Breadcrumb
@@ -86,7 +103,7 @@ const IndiceProyecto = () => {
                 ]}
             />
 
-            <Regresar enlace='/home'/>
+            <Regresar enlace='/configuracion/menu/catalogos/programaticos'/>
     
             <Titulo text="REGISTRO DE PROYECTOS" />
 
@@ -103,7 +120,7 @@ const IndiceProyecto = () => {
                     <h3 className="text-white font-bold">REGISTRO DE PROYECTOS</h3>
                 </div>
 
-                <CustomTable columns={columns} data={data} />
+                <CustomTable columns={columns} data={dataTable} />
             </div>
         </>
     )

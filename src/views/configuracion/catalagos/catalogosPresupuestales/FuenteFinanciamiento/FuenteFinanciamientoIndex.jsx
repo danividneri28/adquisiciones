@@ -1,45 +1,57 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { useMemo } from "react";
+import { Link, Navigate } from "react-router-dom";
+
 import CustomTable from "../../../../../components/CustomTable";
 import Breadcrumb from "../../../../../components/Breadcrumb";
 import Titulo from "../../../../../components/Titulo";
 import NfuenteFinanciamiento from "../../../../../assets/images/configuracion/presupuestales/FuenteFinanciamiento/NfuenteFinanciamiento.png";
 import Regresar from "../../../../../components/Regresar";
+
+import { useQuery } from "@tanstack/react-query";
+
+import { getFinanciamientos } from "../../../../../api/configuracion/ApiFinanciamiento";
+import Spinner from "../../../../../components/Spinner";
+
 export default function FuenteFinanciamientoIndex() {
-  const columns = React.useMemo(
+
+  const  { data, isLoading, isError } = useQuery({
+    queryKey: ['getFinanciamientos'],
+    queryFn: getFinanciamientos,
+  });
+
+  const columns = useMemo(
     () => [
       {
-        accessorKey: "Nombre",
+        accessorKey: "nombre",
         label: "Nombre",
+        cell: (info) => info.getValue(),
         filterFn: "equalsString",
       },
       {
-        accessorKey: "Descripción",
+        accessorKey: "description",
         label: "Descripción",
         cell: (info) => info.getValue(),
         filterFn: "includesStringSensitive",
       },
       {
-        accessorKey: "Codigo",
+        accessorKey: "codigo",
         label: "Codigo",
         cell: (info) => info.getValue(),
         filterFn: "includesStringSensitive",
       },
-
       {
-        accessorKey: "Estado",
+        accessorKey: "estado",
         label: "Estado",
         cell: (info) => (
           <span
-            className={`px-2 py-1 rounded text-white 
-              ${
-                info.row.original.Estado === "Activa 0"
-                  ? "bg-customGreen"
-                  : "bg-gray-400"
-              }`}
+            className={`px-6 py-2 rounded text-white align-middle 
+              ${ info.row.original.estado === "Activo"
+                ? "bg-customGreen"
+                : "bg-gray-400"
+            }`}
           >
-            {info.row.original.Estado}
-          </span>
+          {info.row.original.estado}
+        </span>
         ),
         filterFn: "includesStringSensitive",
       },
@@ -49,7 +61,7 @@ export default function FuenteFinanciamientoIndex() {
         cell: (info) => (
           <div>
             <Link
-              to={`/configuracion/catalogos/presupuestales/FuenteFinanciamiento/edit`}
+              to={`/configuracion/catalogos/presupuestales/FuenteFinanciamiento/edit/${info.getValue()}`}
               className="bg-customRed text-white px-2 py-1 rounded"
             >
               Ver/Editar
@@ -62,20 +74,24 @@ export default function FuenteFinanciamientoIndex() {
     []
   );
 
-  const data = React.useMemo(
-    () =>
-      Array.from({ length: 1000 }, (_, i) => ({
-        id: i,
-        Nombre: `Servicios Personales ${i}`,
-        Descripción: `Lorem ipsum dolor sit amet, consectetur adipisicing elit.. ${i}`,
-        Codigo: `100${i}`,
-        Estado: `Activa ${i}`,
-        Acciones: `Ver/Editar`,
-      })),
-    []
-  );
+  const dataTable = useMemo(() => {
+    if (data) {
+      return data.map((item) => {
+        return {
+          nombre: item.nombre_financiemiento,
+          description: item.desc_financiamiento,
+          codigo: item.codigo_financiemiento,
+          estado: item.estado,
+          Acciones: item.id_financiamiento,
+        };
+      });
+    }
+    return [];
+  }, [data]);
 
-  return (
+  if (isLoading) return <Spinner />;
+  if (isError) return <Navigate to="/404" />;
+  if(data) return (
     <>
       <Breadcrumb
         items={[
@@ -110,7 +126,7 @@ export default function FuenteFinanciamientoIndex() {
             </h3>
           </div>
 
-          <CustomTable columns={columns} data={data} />
+          <CustomTable columns={columns} data={dataTable} />
         </div>
       </div>
     </>

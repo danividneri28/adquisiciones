@@ -3,6 +3,7 @@ import Breadcrumb from '../../../components/Breadcrumb'
 import Titulo from '../../../components/Titulo'
 import CustomTable from '../../../components/CustomTable';
 import { Link } from 'react-router-dom';
+import Regresar from '../../../components/Regresar';
 
 const ProveedorConsolidadoHistorial = () => {
     const columns = React.useMemo(
@@ -90,12 +91,7 @@ const ProveedorConsolidadoHistorial = () => {
                     { text: "HISTORIAL DE CONSOLIDADOS" },
                 ]}
             />
-            <a
-                href="/funciones/proveedor/consolidados"
-                className="block w-24 h-10 pl-2 mt-5 font-bold text-xl text-black cursor-pointer"
-            >
-                REGRESAR
-            </a>
+            <Regresar enlace="/funciones/proveedor/consolidados"/>
             <Titulo text={"HISTORIAL DE CONSOLIDADOS"} className='mb-28' />
             <div>
                 <div className="flex flex-col w-full h-full mt-4 text-gray-700 bg-white shadow-md rounded-lg bg-clip-border mb-20">

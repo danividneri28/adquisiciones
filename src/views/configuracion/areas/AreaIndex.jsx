@@ -68,7 +68,7 @@ export default function AreaIndex() {
         <Breadcrumb
           items={[
             { href: "/configuracion/menu", text: "CONFIGURACIÓN" },
-            { text: "REGISTROS DE AREAS" },
+            { text: "REGISTROS DE ÁREAS" },
           ]}
         />
 

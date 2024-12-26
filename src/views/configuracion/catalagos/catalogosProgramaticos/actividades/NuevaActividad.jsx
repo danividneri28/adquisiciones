@@ -1,12 +1,44 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Breadcrumb from '../../../../../components/Breadcrumb'
 import Titulo from '../../../../../components/Titulo'
 import { Link } from 'react-router-dom'
 import FormActividad from '../../../../../components/configuracion/catalogosProgramaticos/FormActividad'
+import { useForm } from 'react-hook-form'
+import { useMutation } from '@tanstack/react-query'
+import { crearActividad } from '../../../../../api/configuracion/catalogos/programaticos/ActividadesApi'
+import { onError } from '../../../../../utils/onError'
+import AlertSuccess from '../../../../../components/AlertSuccess'
 
 const NuevaActividad = () => {
+    const [showSuccess, setShowSuccess] = useState(false);
+
+    const initialValues = {
+        nombre: "",
+        codigo: "",
+        descripcion: "",
+        id_unidad_medida: "",
+        id_proyecto: "",
+        id_tipo_actividad: "",
+        anio: "",
+        estado: "",
+    }
+
+    const { register, handleSubmit, formState: { errors }, setError, control } = useForm({ defaultValues: initialValues });
+    
+    const { mutate } = useMutation({
+        mutationFn: crearActividad,
+        onError: (error) => {
+            onError(error, setError);
+        },
+        onSuccess: (data) => {
+            setShowSuccess(true);
+        }
+    });
+
+    const handleForm = (formData) => mutate(formData);
     return (
         <>
+            { showSuccess && <AlertSuccess route='/configuracion/catalogos/programaticos/actividades' /> }
             <Breadcrumb
                 items={[
                     { href: "/home", text: "CONFIGURACIÓN" },
@@ -24,9 +56,17 @@ const NuevaActividad = () => {
                     <h3 className="text-white font-bold">CREAR ACTIVIDAD</h3>
                 </div>
 
-                <form className="flex flex-col p-4 space-y-2 bg-customRed2 mt-1">
+                <form 
+                    className="flex flex-col p-4 space-y-2 bg-customRed2 mt-1"
+                    onSubmit={handleSubmit(handleForm)}
+                    noValidate
+                >
                     
-                    <FormActividad />
+                    <FormActividad 
+                        register={register}
+                        errors={errors}
+                        control={control}
+                    />
 
                     <div className="flex justify-end">
                         <Link

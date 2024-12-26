@@ -5,29 +5,32 @@ import Breadcrumb from "../../../../../../components/Breadcrumb";
 import Titulo from "../../../../../../components/Titulo";
 import CustomTable from "../../../../../../components/CustomTable";
 import Regresar from "../../../../../../components/Regresar";
+import { getSubcapitulos } from "../../../../../../api/configuracion/catalogos/presupuestales/objetoGasto/subcapitulos/ApiSubcapitulos";
+import { useQuery } from "@tanstack/react-query";
+import Spinner from "../../../../../../components/Spinner";
 
 export default function SubCapituloIndex() {
   const columns = React.useMemo(
     () => [
       {
-        accessorKey: "Nombre",
+        accessorKey: "nombre_subcapitulo",
         label: "Nombre",
         filterFn: "equalsString",
       },
       {
-        accessorKey: "Codigo",
+        accessorKey: "codigo_subcapitulo",
         label: "Código",
         cell: (info) => info.getValue(),
         filterFn: "includesStringSensitive",
       },
       {
-        accessorKey: "Descripcion",
+        accessorKey: "desc_subcapitulo",
         label: "Descripción",
         cell: (info) => info.getValue(),
         filterFn: "includesStringSensitive",
       },
       {
-        accessorKey: "Capitulo",
+        accessorKey: "capitulo.codigo_capitulo",
         label: "Capitulo",
         cell: (info) => info.getValue(),
         filterFn: "includesStringSensitive",
@@ -37,13 +40,13 @@ export default function SubCapituloIndex() {
         label: "Estado",
         cell: (info) => (
           <span
-            className={`px-2 py-1 rounded text-white ${
-              info.row.original.Estado === "Activa 0"
+            className={`px-6 py-2 rounded text-white ${
+              info.row.original.estado === "Activo"
                 ? "bg-customGreen"
                 : "bg-gray-500"
             }`}
           >
-            {info.row.original.Estado}
+            {info.row.original.estado}
           </span>
         ),
         filterFn: "includesStringSensitive",
@@ -54,8 +57,8 @@ export default function SubCapituloIndex() {
         cell: (info) => (
           <div>
             <Link
-              to={`/configuracion/catalogos/presupuestales/objetoGasto/subcapitulo/edit`}
-              className="bg-customRed text-white px-2 py-1 rounded"
+              to={`/configuracion/catalogos/presupuestales/objetoGasto/subcapitulo/edit/${info.row.original.id_subcapitulo}`}
+              className="bg-customRed text-white px-6 py-2 rounded"
             >
               Ver/Editar
             </Link>
@@ -67,20 +70,15 @@ export default function SubCapituloIndex() {
     []
   );
 
-  const data = React.useMemo(
-    () =>
-      Array.from({ length: 1000 }, (_, i) => ({
-        id: i,
-        Nombre: `Nombre ${i}`,
-        Codigo: `0${i}`,
-        Descripcion: `Coordinación de la politica de Gobierno, Relaciones exteriores, seguridad nacional, seguridad nacional, otros servicios... ${i}`,
-        Capitulo: `100${i}`,
-        Estado: `Activa ${i}`,
-        Acciones: `Ver/Editar`,
-      })),
-    []
-  );
+  const { data, isLoading } = useQuery({
+    queryKey: ["getSubcapitulos"],
+    queryFn: getSubcapitulos,
+  });
 
+  // console.log(data);
+
+  if (isLoading) return <Spinner/>;
+  // if(data.succes)
   return (
     <>
       <Breadcrumb
@@ -116,8 +114,7 @@ export default function SubCapituloIndex() {
           <div className="bg-customRed rounded p-2">
             <h3 className="text-white font-bold">REGISTROS DE SUBCAPITULOS</h3>
           </div>
-
-          <CustomTable columns={columns} data={data} />
+          <CustomTable columns={columns} data={data.data} />
         </div>
       </div>
     </>

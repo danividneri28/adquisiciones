@@ -1,102 +1,137 @@
-import React from 'react'
-import CamposObligatorios from '../../CamposObligatorios'
+import React, { useEffect, useState } from "react";
+import Input from "../../input";
+import Select from "../../select";
+const FormProgPresupuestario = ({ register,dataP,datasub, errors, disabled, existe }) => {
+  
+  return (
+    <>
+      <Input
+        required
+        register={register}
+        errors={errors}
+        disabled={disabled}
+        name="nombre_presupuestario"
+        label="Nombre del programa presupuestario"
+        maxLength={30}
+      />
 
-const FormProgPresupuestario = ({ disabled }) => {
-    return (
-        <>
-            <label className="font-semibold text-white" htmlFor="nombre">
-                *Nombre del programa presupuestario:
-            </label>
-            <input
-                type="text"
-                id="nombre"
-                name="nombre"
-                className="border border-gray-300 rounded px-2 py-1"
-                disabled={disabled}
-            />
+      <label className="font-semibold text-white" htmlFor="descripcion">
+        *Descripción:
+      </label>
 
-            <label className="font-semibold text-white" htmlFor="descripcion">
-                *Descripción:
-            </label>
-            <textarea
-                id="descripcion"
-                name="descripcion"
-                className="border border-gray-300 rounded px-2"
-                rows="6"
-                disabled={disabled}
-            ></textarea>
+      <textarea
+        id="descripcion"
+        name="descripcion"
+        className={`border border-gray-300 rounded px-2 ${'descripcion' in errors ? "border-2 border-red-500" : ""}`}
+        rows="6"
+        disabled={disabled}
+        {...register("descripcion", { 
+          required: 'Campo vacío'
+       })
+      }  
+      ></textarea>
 
-            <label className="font-semibold text-white" htmlFor="codigo">
-                *Código del programa presupuestario:
-            </label>
-            <input
-                type="text"
-                id="codigo"
-                name="codigo"
-                className="border border-gray-300 rounded px-2 py-1"
-                disabled={disabled}
-            />
-            
-            <label className="font-semibold text-white" htmlFor="pilar">
-                *Pilar:
-            </label>
-            <select
-                id="pilar"
-                name="pilar"
-                className="border border-gray-300 rounded px-2 py-1"
-                disabled={disabled}
+      {errors.descripcion && (
+        <p className="text-start text-customRed font-bold uppercase text-sm">
+          {errors.descripcion.message}
+        </p>
+      )}
+
+      <Input
+        required
+        register={register}
+        errors={errors}
+        disabled={existe ? existe : disabled}
+        name="codigo_presupuestario"
+        label="Código del programa presupuestario"
+        maxLength={2}
+        isNumber
+      />
+      
+      <Select
+          required
+          register={register}
+          errors={errors}
+          disabled={disabled}
+          name="pilar"
+          label="Pilar"
+          valueAsNumber
+          data={dataP.data}
+          renderItem={(x) => (
+            <option
+              key={x.id_pilar}
+              value={x.id_pilar}
             >
-                <option value="">Seleccione un pilar</option>
-                <option value="1">Pilar 1</option>
-                <option value="2">Pilar 2</option>
-                <option value="3">Pilar 3</option>
-            </select>
+              {x.descripcion}
+            </option>
+          )}
+        />
 
-            <label className="font-semibold text-white" htmlFor="subfuncion">
-                *Subfunción:
-            </label>
-            <select
-                id="subfuncion"
-                name="subfuncion"
-                className="border border-gray-300 rounded px-2 py-1"
-                disabled={disabled}
+      <Select
+          required
+          register={register}
+          errors={errors}
+          disabled={disabled}
+          name="id_subfuncion"
+          label="Subfunción"
+          valueAsNumber
+          data={datasub.data}
+          renderItem={(x) => (
+            <option
+              key={x.id_subfuncion}
+              value={x.id_subfuncion}
             >
-                <option value="">Seleccione una subfunción</option>
-                <option value="1">Subfunción 1</option>
-                <option value="2">Subfunción 2</option>
-                <option value="3">Subfunción 3</option>
-                <option value="4">Subfunción 4</option>
-            </select>
+              {x.nombre_subfuncion}
+            </option>
+          )}
+        />
 
-            <label className="font-semibold text-white" htmlFor="estado">
-                *Estado:
-            </label>
-            <div className='flex'>
-                <input 
-                    type="radio" 
-                    id="activo" 
-                    name="estado" 
-                    value="activo" 
-                    className='mr-1'
-                    defaultChecked
-                    disabled={disabled}
-                />
-                <label htmlFor="activo" className='mr-4 text-white'>Activo</label>
+      <label className="font-semibold text-white" htmlFor="estado">
+        *Estado:
+      </label>
+      <div className="flex">
+        <input
+          type="radio"
+          id="activo"
+          name="estado"
+          value="Activo"
+          className="mr-1"
+          disabled={existe ? existe : disabled}
+          defaultChecked
+          { ...register("estado", { 
+            required: !existe ? "Campo vacío" : false,
+            })
+          }  
+        />
+        <label htmlFor="activo" className="mr-4 text-white">
+          Activo
+        </label>
 
-                <input
-                    type="radio"
-                    id="inactivo"
-                    name="estado"
-                    value="inactivo"
-                    className='mr-1'
-                    disabled={disabled}
-                />
-                <label htmlFor="inactivo" className='text-white'>Inactivo</label>
-            </div>
+        <input
+          type="radio"
+          id="inactivo"
+          name="estado"
+          value="Inactivo"
+          className="mr-1"
+          disabled={ existe ? existe : disabled}
+          {...register("estado", { 
+            required: !existe ? "Campo vacío" : false,
+            })
+          } 
+        />
+        <label htmlFor="inactivo" className="text-white">
+          Inactivo
+        </label>
 
-            <CamposObligatorios />
-        </>
-    )
-}
+        
+      </div>
+      {errors.estado && (
+          <p className="block text-start text-customRed font-bold uppercase text-sm">
+            {errors.estado.message}
+          </p>
+        )}
+    </>
+  );
+};
 
-export default FormProgPresupuestario
+export default FormProgPresupuestario;

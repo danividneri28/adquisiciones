@@ -1,45 +1,55 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import CustomTable from "../../../../../components/CustomTable";
+import { Link, Navigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import Breadcrumb from "../../../../../components/Breadcrumb";
-import Titulo from "../../../../../components/Titulo";
 import ClasificacionNFuncional from "../../../../../assets/images/configuracion/presupuestales/clasificacionFuncional/clasificacionNFuncional.png";
+import Titulo from "../../../../../components/Titulo";
+import CustomTable from "../../../../../components/CustomTable";
+import Spinner from "../../../../../components/Spinner";
+import { obtenerClasificaciones } from "../../../../../api/configuracion/catalogos/presupuestales/ApiClasificacion";
+import { useMemo } from "react";
 import Regresar from "../../../../../components/Regresar";
 
+
+
 export default function ClasificacionFuncionalIndex() {
-  const columns = React.useMemo(
+  const { data, isLoading, isError} = useQuery({
+    queryKey:["obtenerClasificaciones"],
+    queryFn: obtenerClasificaciones,
+  });
+
+
+  const columns = useMemo(
     () => [
       {
-        accessorKey: "Nombre",
+        accessorKey: "nombre_c_funcional",
         label: "Nombre",
         filterFn: "equalsString",
       },
       {
-        accessorKey: "Descripción",
+        accessorKey: "desc_c_funcional",
         label: "Descripción",
         cell: (info) => info.getValue(),
         filterFn: "includesStringSensitive",
       },
       {
-        accessorKey: "Codigo",
-        label: "Codigo",
+        accessorKey: "codigo_c_funcional",
+        label: "Código",
         cell: (info) => info.getValue(),
         filterFn: "includesStringSensitive",
       },
 
       {
-        accessorKey: "Estado",
+        accessorKey: "estado",
         label: "Estado",
         cell: (info) => (
           <span
             className={`px-2 py-1 rounded text-white 
               ${
-                info.row.original.Estado === "Activa 0"
-                  ? "bg-customGreen"
+                info.getValue() === 'Activo' ? "bg-customGreen"
                   : "bg-gray-400"
               }`}
           >
-            {info.row.original.Estado}
+            {info.getValue()}
           </span>
         ),
         filterFn: "includesStringSensitive",
@@ -50,7 +60,7 @@ export default function ClasificacionFuncionalIndex() {
         cell: (info) => (
           <div>
             <Link
-              to={`/configuracion/catalogos/presupuestales/clasificacionFuncional/edit`}
+              to={`/configuracion/catalogos/presupuestales/clasificacionFuncional/edit/${info.getValue()}`}
               className="bg-customRed text-white px-2 py-1 rounded"
             >
               Ver/Editar
@@ -63,28 +73,35 @@ export default function ClasificacionFuncionalIndex() {
     []
   );
 
-  const data = React.useMemo(
-    () =>
-      Array.from({ length: 1000 }, (_, i) => ({
-        id: i,
-        Nombre: `Servicios Personales ${i}`,
-        Descripción: `Lorem ipsum dolor sit amet, consectetur adipisicing elit.. ${i}`,
-        Codigo: `100${i}`,
-        Estado: `Activa ${i}`,
-        Acciones: `Ver/Editar`,
-      })),
-    []
-  );
+  const dataTable = useMemo(() => {
+    if (data) {
+      return data.data.map((item) => {
+        return {
+          nombre_c_funcional: item.nombre_c_funcional,
+          desc_c_funcional: item.desc_c_funcional,
+          codigo_c_funcional: item.codigo_c_funcional,
+          estado: item.estado,
+          Acciones: item.id_c_funcional,
+        };
+      });
+    }
+    return [];
+  }, [data]);
 
-  return (
+
+
+  if (isLoading) return <Spinner />;
+  if (isError) return <Navigate to="/404" />;
+  
+  if(data) return (
     <>
       <Breadcrumb
         items={[
           { href: "/configuracion/menu", text: "CONFIGURACIÓN" },
-          { href: "/configuracion/catalogos/menu", text: "CATALOGOS" },
+          { href: "/configuracion/catalogos/menu", text: "CATÁLOGOS" },
           {
             href: "/configuracion/catalogos/presupuestales",
-            text: "CATALOGOS PRESUPUESTALES",
+            text: "CATÁLOGOS PRESUPUESTALES",
           },
           { text: "REGISTROS DE CLASIFICACIÓN FUNCIONAL" },
         ]}
@@ -108,7 +125,7 @@ export default function ClasificacionFuncionalIndex() {
             <h3 className="text-white font-bold">REGISTROS DE CLASIFICACIÓN FUNCIONAL</h3>
           </div>
 
-          <CustomTable columns={columns} data={data} />
+          <CustomTable columns={columns} data={dataTable} />
         </div>
       </div>
     </>

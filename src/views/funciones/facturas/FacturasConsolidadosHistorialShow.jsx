@@ -1,6 +1,7 @@
 import React from 'react'
 import Breadcrumb from '../../../components/Breadcrumb'
 import Titulo from '../../../components/Titulo'
+import Regresar from '../../../components/Regresar'
 
 const FacturasConsolidadosHistorialShow = () => {
     return (
@@ -15,12 +16,8 @@ const FacturasConsolidadosHistorialShow = () => {
                     { text: "REQUISICIÓN" },
                 ]}
             />
-            <a
-                href="/funciones/facturas/consolidados/historial/registros"
-                className="block w-24 h-10 pl-2 mt-5 font-bold text-xl text-black cursor-pointer"
-            >
-                REGRESAR
-            </a>
+
+            <Regresar enlace="/funciones/facturas/consolidados/historial/registros" />
             <div>
 
             </div>

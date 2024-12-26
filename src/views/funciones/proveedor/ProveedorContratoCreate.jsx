@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Breadcrumb from '../../../components/Breadcrumb';
 import Titulo from '../../../components/Titulo';
+import Regresar from '../../../components/Regresar';
 
     
 
@@ -28,12 +29,7 @@ const ProveedorContratoCreate = () => {
                     { text: "PROVEEDOR Y CONTRATO" },
                 ]}
             />
-            <a
-                href="/funciones/proveedor/listado"
-                className="block w-24 h-10 pl-2 mt-5 font-bold text-xl text-black cursor-pointer"
-            >
-                REGRESAR
-            </a>
+            <Regresar enlace="/funciones/proveedor/listado" />
             <Titulo text={"PROVEEDOR Y CONTRATO"} />
             <div className="bg-gray-100  mt-8 rounded-lg">
                 <div

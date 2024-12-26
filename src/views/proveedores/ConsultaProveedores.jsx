@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Breadcrumb from "../../components/Breadcrumb";
 import Titulo from "../../components/Titulo";
 import CustomTable from "../../components/CustomTable";
+import Regresar from "../../components/Regresar";
 
 export default function ConsultaProveedores() {
     const columns = React.useMemo(
@@ -114,7 +115,7 @@ export default function ConsultaProveedores() {
                 items={[
                     { href: "/funciones", text: "FUNCIONES" },
                     {
-                        text: "REGISTROS DE PROVEEDORES",
+                        href: "/funciones/proveedores/create",  text: "REGISTROS DE PROVEEDORES",
                     },
                     {
                         text: "CONSULTA DE PROVEEDORES",
@@ -124,12 +125,9 @@ export default function ConsultaProveedores() {
             />
 
             <Titulo text={"CONSULTA DE PROVEEDORES"} />
-            <a
-                href="/funciones/proveedores/create"
-                className="block w-24 h-10 pl-2 mt-5 font-bold text-xl text-black cursor-pointer"
-            >
-                REGRESAR
-            </a>
+
+              <Regresar enlace="/funciones/proveedores/create" />
+            
             <div>
                 <div className="flex justify-center items-center">
                     {/* APARTADO DE SELECT */}

@@ -1,4 +1,5 @@
 import Breadcrumb from "../../../components/Breadcrumb"
+import Regresar from "../../../components/Regresar"
 import Titulo from "../../../components/Titulo"
 
 
@@ -15,12 +16,8 @@ const FacturasCreate = () => {
                     { text: "COMPROBACIÓN Y FACTURAS" },
                 ]}
             />
-            <a
-                href="/funciones/facturas/listado"
-                className="block w-24 h-10 pl-2 mt-5 font-bold text-xl text-black cursor-pointer"
-            >
-                REGRESAR
-            </a>
+
+            <Regresar enlace="/funciones/facturas/listado" />
             <Titulo text={"COMPROBACIÓN Y FACTURAS"} />
             <div className="bg-gray-100  mt-8 rounded-lg">
                 <div

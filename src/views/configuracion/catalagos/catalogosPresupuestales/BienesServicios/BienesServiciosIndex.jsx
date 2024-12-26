@@ -1,48 +1,64 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { useMemo } from "react";
+import { Link, Navigate } from "react-router-dom";
 import CustomTable from "../../../../../components/CustomTable";
 import Breadcrumb from "../../../../../components/Breadcrumb";
 import Titulo from "../../../../../components/Titulo";
 import NuevobienServicio from "../../../../../assets/images/configuracion/presupuestales/BienesServicios/NuevobienServicio.png";
 import Regresar from "../../../../../components/Regresar";
+import { useQuery } from "@tanstack/react-query";
+import { getBienesServicios } from "../../../../../api/configuracion/ApiBienesServicios";
+import Spinner from "../../../../../components/Spinner";
 
 export default function BienesServicisoIndex() {
-  const columns = React.useMemo(
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["getBienesServicios"],
+    queryFn: getBienesServicios,
+  })
+
+  const columns = useMemo(
     () => [
       {
-        accessorKey: "Fecha_de_alta",
+        accessorKey: "created_at",
         label: "Fecha de alta",
+        cell: (info) => info.getValue(),
         filterFn: "equalsString",
       },
       {
-        accessorKey: "no_de_articulo",
-        label: "No. de Articulo",
+        accessorKey: "capitulo",
+        label: "Capítulo",
         cell: (info) => info.getValue(),
         filterFn: "includesStringSensitive",
       },
       {
-        accessorKey: "Nombre",
+        accessorKey: "subcapitulo",
+        label: "Subcapitulo",
+        cell: (info) => info.getValue(),
+        filterFn: "includesStringSensitive",
+      },
+      {
+        accessorKey: "generica",
+        label: "Generica",
+        cell: (info) => info.getValue(),
+        filterFn: "includesStringSensitive",
+      },
+      {
+        accessorKey: "especifica",
+        label: "Especifica",
+        cell: (info) => info.getValue(),
+        filterFn: "includesStringSensitive",
+      },
+      {
+        accessorKey: "nombre_articulo",
         label: "Nombre",
         cell: (info) => info.getValue(),
         filterFn: "includesStringSensitive",
       },
       {
-        accessorKey: "Descripción",
-        label: "Descripción",
+        accessorKey: "tipo_bien",
+        label: "Tipo de Bien",
         cell: (info) => info.getValue(),
-        filterFn: "includesStringSensitive",
-      },
-      {
-        accessorKey: "PartidaEspecifica",
-        label: "Partida especifica",
-        cell: (info) => info.getValue(),
-        filterFn: "includesStringSensitive",
-      },
-      {
-        accessorKey: "Unidad_de_medida",
-        label: "Unidad de medida",
-        cell: (info) => info.getValue(),
-        filterFn: "includesStringSensitive",
+        filterFn: "equalsString",
       },
       {
         accessorKey: "Acciones",
@@ -50,7 +66,7 @@ export default function BienesServicisoIndex() {
         cell: (info) => (
           <div>
             <Link
-              to={`/configuracion/catalogos/presupuestales/BienesServicios/edit`}
+              to={`/configuracion/catalogos/presupuestales/BienesServicios/edit/${info.getValue()}`}
               className="bg-customRed text-white px-2 py-1 rounded"
             >
               Ver/Editar
@@ -63,22 +79,36 @@ export default function BienesServicisoIndex() {
     []
   );
 
-  const data = React.useMemo(
-    () =>
-      Array.from({ length: 1000 }, (_, i) => ({
-        id: i,
-        Fecha_de_alta: `10/10/2024`,
-        no_de_articulo: `20261022${i}`,
-        Nombre: `Gas`,
-        Descripción: `Caja con 150 paquetes de 6 pzas`,
-        PartidaEspecifica: `2411 - Productos Minerales`,
-        Unidad_de_medida: `Caja`,
-        Acciones: `Ver/Editar`,
-      })),
-    []
-  );
-
-  return (
+  const dataTable = useMemo(() => {
+    if(data){
+      return data.map((item) => {
+        const capitulo = item.partidas?.[0]?.partidas_generales?.[0]?.sub_capitulos?.[0]?.capitulos?.[0]?.nombre_capitulo || '';
+        const codigo_capitulo = item.partidas?.[0]?.partidas_generales?.[0]?.sub_capitulos?.[0]?.capitulos?.[0]?.codigo_capitulo || '';
+        const subcapitulo = item.partidas?.[0]?.partidas_generales?.[0]?.sub_capitulos?.[0]?.nombre_subcapitulo || '';
+        const codigo_subcapitulo = item.partidas?.[0]?.partidas_generales?.[0]?.sub_capitulos?.[0]?.codigo_subcapitulo || '';
+        const generica = item.partidas?.[0]?.partidas_generales?.[0]?.nombre_partida_g || '';
+        const codigo_generica = item.partidas?.[0]?.partidas_generales?.[0]?.codigo_partida_g || '';
+        const especifica = item.partidas?.[0]?.nombre_partida_e || '';
+        const codigo_especifica = item.partidas?.[0]?.codigo_partida_e || '';
+        return {
+          nombre_articulo: item.nombre_articulo,
+          tipo_bien: item.tipo_bien,
+          capitulo:`${codigo_capitulo} - ${capitulo}`,
+          subcapitulo:`${codigo_subcapitulo} - ${subcapitulo}`,
+          generica:`${codigo_generica} - ${generica}`,
+          especifica:`${codigo_especifica} - ${especifica}`,
+          created_at: item.created_at.slice(0,10),
+          Acciones: item.id_bien_servicio,
+        };
+      });
+    }
+    return [];
+  }, [data]);
+  
+  if(isLoading) return <Spinner />;
+  if (isError) return <Navigate to="/404" />;
+  
+  if(data) return(
     <>
       <Breadcrumb
         items={[
@@ -111,7 +141,7 @@ export default function BienesServicisoIndex() {
             <p className="text-customRed text-xl my-2 font-bold text-center">
               Tipo:
             </p>
-            <select class="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
+            <select className="py-3 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
               <option selected="">Seleccione una opción</option>
               <option>Consumible</option>
               <option>Inventariable</option>
@@ -128,7 +158,7 @@ export default function BienesServicisoIndex() {
             </h3>
           </div>
 
-          <CustomTable columns={columns} data={data} />
+          <CustomTable columns={columns} data={dataTable} />
         </div>
       </div>
     </>

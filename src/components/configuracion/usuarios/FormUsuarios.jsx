@@ -1,8 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import CamposObligatorios from '../../CamposObligatorios'
 import MensajeError from '../../MensajeError'
+import { useAreas } from '../../../hooks/useAreas'
+import Spinner from '../../Spinner'
+import AlertaError from '../../AlertError'
+import InputField from '../../InputField'
 
 const FormUsuarios = ({ register, errors, disabled }) => {
+
+    useEffect(() => {
+        if (Object.keys(errors).length > 0) {
+            AlertaError({title: "¡Campos vacíos!", text: "Para continuar completa todos los campos"})
+        }
+    }, [errors]);
+
+    const { data, isError, isLoading } = useAreas();
+
+    if (isLoading) return <Spinner />
+    
     return (
         <>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -14,7 +29,7 @@ const FormUsuarios = ({ register, errors, disabled }) => {
                         required
                         disabled={disabled}
                         {...register("tipo", { 
-                                required: "El tipo de usuario es requerido"
+                                required: "Campo vacío"
                             })
                         }                            
                     >
@@ -29,104 +44,52 @@ const FormUsuarios = ({ register, errors, disabled }) => {
                     )}
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-white">*Nombre:</label>
-                    <input
-                        type="text"
-                        id="nombre"
-                        className={`mt-1 block w-full rounded-md border-2 shadow-sm p-3 sm:text-sm ${errors.nombre ? 'border-red-600' : 'border-gray-300'}`}
-                        {...register("nombre", {
-                            required: "El nombre es requerido",
-                            maxLength: { value: 20, message: "No más de 20 carácteres" },
-                            minLength: { value: 3, message: "Mínimo 3 carácteres"}
-                        })}
-                        disabled={disabled}
-                    />
+                <InputField
+                    id="nombre"
+                    label="*Nombre:"
+                    register={register}
+                    errors={errors}
+                    validationRules={{ required: "Campo vacío", maxLength: { value: 20, message: "No más de 20 carácteres" }, minLength: { value: 3, message: "Mínimo 3 carácteres"} }}
+                    disabled={disabled}
+                />
 
-                    {errors.nombre && (
-                        <MensajeError>{errors.nombre.message}</MensajeError>
-                    )}
-                </div>
+                <InputField
+                    id="ap_paterno"
+                    label="*Apellido Paterno:"
+                    register={register}
+                    errors={errors}
+                    validationRules={{ required: "Campo vacío", maxLength: { value: 20, message: "No más de 20 carácteres" }, minLength: { value: 3, message: "Mínimo 3 carácteres"} }}
+                    disabled={disabled}
+                />
 
-                <div>
-                    <label className="block text-sm font-medium text-white">*Apellido paterno:</label>
-                    <input
-                        type="text"
-                        name="ap_paterno"
-                        className={`mt-1 block w-full rounded-md border-2 shadow-sm p-3 sm:text-sm ${errors.ap_paterno ? 'border-red-600' : 'border-gray-300'}`}
-                        required
-                        {...register("ap_paterno", {
-                            required: "El apellido paterno es requerido",
-                            maxLength: { value: 20, message: "No más de 20 carácteres" },
-                            minLength: { value: 3, message: "Mínimo 3 carácteres"}
-                        })}
-                        disabled={disabled}
-                    />
+                <InputField
+                    id="ap_materno"
+                    label="*Apellido Materno:"
+                    register={register}
+                    errors={errors}
+                    validationRules={{ required: "Campo vacío", maxLength: { value: 20, message: "No más de 20 carácteres" }, minLength: { value: 3, message: "Mínimo 3 carácteres"} }}
+                    disabled={disabled}
+                />
 
-                    {errors.ap_paterno && (
-                        <MensajeError>{errors.ap_paterno.message}</MensajeError>
-                    )}
-                </div>
+                <InputField
+                    id="correo"
+                    label="Correo electronico:"
+                    type="email"
+                    register={register}
+                    errors={errors}
+                    validationRules={{ required: "Campo vacío", pattern: { value: /\S+@\S+\.\S+/, message: "Correo no válido", }, }}
+                    disabled={disabled}
+                />
 
-                <div>
-                    <label className="block text-sm font-medium text-white">*Apellido Materno:</label>
-                    <input
-                        type="text"
-                        id="ap_materno"
-                        className={`mt-1 block w-full rounded-md border-2 shadow-sm p-3 sm:text-sm ${errors.ap_materno ? 'border-red-600' : 'border-gray-300'}`}
-                        required
-                        {...register("ap_materno", {
-                            required: "El apellido materno es requerido",
-                            maxLength: { value: 20, message: "No más de 20 carácteres" },
-                            minLength: { value: 3, message: "Mínimo 3 carácteres"}
-                        })}
-                        disabled={disabled}
-                    />
-                    {errors.ap_materno && (
-                        <MensajeError>{errors.ap_materno.message}</MensajeError>
-                    )}
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-white">Correo electronico:</label>
-                    <input
-                        type="email"
-                        name="correo"
-                        className={`mt-1 block w-full rounded-md border-2 shadow-sm p-3 sm:text-sm ${errors.correo ? 'border-red-600' : 'border-gray-300'}`}
-                        {...register("correo", {
-                            required: "El correo de registro es obligatorio",
-                            pattern: {
-                              value: /\S+@\S+\.\S+/,
-                              message: "Correo no válido",
-                            },
-                        })}
-                        disabled={disabled}
-                    />
-
-                    {errors.correo && (
-                        <MensajeError>{errors.correo.message}</MensajeError>
-                    )}
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-white">*Numero de Empleado:</label>
-                    <input
-                        type="text"
-                        name="num_empleado"
-                        className={`mt-1 block w-full rounded-md border-2 shadow-sm p-3 sm:text-sm ${errors.num_empleado ? 'border-red-600' : 'border-gray-300'}`}
-                        maxLength={10}
-                        {...register("num_empleado", {
-                            required: "El número de empleado es requerido",
-                            maxLength: { value: 10, message: "No más de 10 carácteres" },
-                            minLength: { value: 10, message: "Mínimo 10 carácteres"},
-                        })}
-                        disabled={disabled}
-                    />
-
-                    {errors.num_empleado && (
-                        <MensajeError>{errors.num_empleado.message}</MensajeError>
-                    )}
-                </div>
+                <InputField
+                    id={"num_empleado"}
+                    label={"*Numero de Empleado:"}
+                    register={register}
+                    errors={errors}
+                    validationRules={{ required: "Campo vacío", maxLength: { value: 10, message: "No más de 10 carácteres" }, minLength: { value: 10, message: "Mínimo 10 carácteres"} }}
+                    disabled={disabled}
+                    maxLength="10"
+                />
 
                 <div className="col-span-full">
                     <label className="block text-sm font-medium text-white">*Area de Adquisición:</label>
@@ -134,14 +97,14 @@ const FormUsuarios = ({ register, errors, disabled }) => {
                         name="id_area"
                         className={`mt-1 block w-full rounded-md border-2 shadow-sm p-3 sm:text-sm ${errors.id_area ? 'border-red-600' : 'border-gray-300'}`}
                         {...register("id_area", {
-                            required: "El área de adquisición es requerida"
+                            required: "Campo vacío"
                         })}
                         disabled={disabled}
                     >
                         <option value="" disabled>Selecciona un tipo</option>
-                        <option value="1">Dirección General de Administración</option>
-                        <option value="2">Subdireccion de tegnologias</option>
-                        <option value="3">DG Servicios Urbanos</option>
+                        {data.data.map((area) => (
+                            <option key={area.id} value={area.id}>{area.nombre_area}</option>
+                        ))}
                     </select>
 
                     {errors.id_area && (
@@ -212,32 +175,14 @@ const FormUsuarios = ({ register, errors, disabled }) => {
                 </div>
 
                 <div className="mt-3">
-                    <label className="block text-sm font-medium text-white">
-                        *Estado:
-                    </label>
-
+                    <label className="block text-sm font-medium text-white">*Estado:</label>
                     <label className="inline-flex items-center">
-                        <input
-                            type="radio"
-                            id="estado"
-                            value="Activo"
-                            className="text-blue-500 focus:ring-blue-500"
-                            defaultChecked
-                            disabled={disabled}
-                            {...register("estado")}
-                        />
+                        <input type="radio" id="estado" value="Activo" className="text-blue-500 focus:ring-blue-500" defaultChecked disabled={disabled} {...register("estado")}/>
                         <span className="ml-2 text-white">Activo</span>
                     </label>
 
                     <label className="inline-flex items-center ml-4">
-                        <input
-                            type="radio"
-                            id="estado"
-                            value="Inactivo"
-                            className="text-blue-500 focus:ring-blue-500"
-                            {...register("estado")}
-                            disabled={disabled}
-                        />
+                        <input type="radio" id="estado" value="Inactivo" className="text-blue-500 focus:ring-blue-500" {...register("estado")} disabled={disabled}/>
                         <span className="ml-2 text-white">Inactivo</span>
                     </label>
                 </div>

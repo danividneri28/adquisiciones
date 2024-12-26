@@ -1,6 +1,7 @@
 // import { Link } from "react-router-dom";
 import Titulo from "../../components/Titulo";
 import Breadcrumb from "../../components/Breadcrumb";
+import Regresar from "../../components/Regresar";
 
 const ProveedoresNew = () => {
   return (
@@ -9,13 +10,9 @@ const ProveedoresNew = () => {
         <Breadcrumb
           items={
             [
-              // { href: "/configuracion/menu", text: "CONFIGURACIÓN" },
-              // { href: "/configuracion/catalogos/menu", text: "CATALOGOS" },
-              // { href: "/configuracion/catalogos/presupuestales", text: "CATALOGOS PRESUPUESTALES" },
-              // { href: "/configuracion/catalogos/presupuestales/objetoGasto", text: "CLASIFICACIÓN POR OBJETO DE GASTO" },
-              // { href: "/configuracion/catalogos/presupuestales/objetoGasto/capitulo", text: "REGISTROS DE CAPITULOS" },
-              // { text: "CAPITULO" },
-            ]
+              { href: "/funciones", text: "FUNCIONES" },
+              { href: "/funciones/proveedores/create", text: "REGISTRO DE PROVEEDORES" },
+              { text: "REGISTRO DE PROVEEDOR" },            ]
           }
         />
 
@@ -23,13 +20,7 @@ const ProveedoresNew = () => {
 
         <Titulo text={"REGISTRO DE PROVEEDOR"} className="mt-14" />
 
-
-        <a
-        href="/funciones/proveedores/create"
-        className="block w-24 h-10 pl-2 mt-5 font-bold text-xl text-black cursor-pointer"
-        >
-        REGRESAR
-        </a>
+            <Regresar enlace="/funciones/proveedores/create" />
 
 
         <div className="bg-gray-100  mt-8 rounded-lg">

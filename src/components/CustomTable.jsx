@@ -94,7 +94,7 @@ const CustomTable = ({ columns, data }) => {
                             <tr key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <th key={header.id} colSpan={1} className="bg-customYellow text-white p-2">
+                                        <th key={header.id} colSpan={1} className="bg-customYellow text-white p-2 align-middle">
                                             {header.isPlaceholder ? null : (
                                                 <div
                                                     {...{
@@ -122,12 +122,12 @@ const CustomTable = ({ columns, data }) => {
                             return (
                                 <tr 
                                     key={row.id} 
-                                    className={`h-12 w-full ${index % 2 === 0 ? 'bg-white' : 'bg-customYellow'}`}
+                                    className={`h-12 w-full ${index % 2 === 0 ? 'bg-white' : 'bg-customYellow'} align-middle`}
 
                                 >
                                     {row.getVisibleCells().map((cell) => {
                                         return (
-                                            <td key={cell.id} colSpan={1} className="p-2 text-black">
+                                            <td key={cell.id} colSpan={1} className="p-2 text-black align-middle">
                                                 {flexRender(
                                                     cell.column.columnDef.cell,
                                                     cell.getContext()

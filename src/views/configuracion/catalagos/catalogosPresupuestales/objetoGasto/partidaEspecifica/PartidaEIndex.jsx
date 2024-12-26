@@ -1,60 +1,57 @@
 import { Link } from "react-router-dom";
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import Spinner from "../../../../../../components/Spinner";
 import NuevaPartidaEspecifica from "../../../../../../assets/images/configuracion/presupuestales/clasificacion_por_gastos/npartidaespecífica.png";
 import Breadcrumb from "../../../../../../components/Breadcrumb";
 import CustomTable from "../../../../../../components/CustomTable";
 import Titulo from "../../../../../../components/Titulo";
+import { obtenerPartidasEspecificas } from "../../../../../../api/configuracion/ApiPartidasEspecificas";
 import Regresar from "../../../../../../components/Regresar";
 
 export default function PartidaEIndex() {
   const columns = React.useMemo(
     () => [
       {
-        accessorKey: "Nombre",
+        accessorKey: "nombre_partida_e",
         label: "Nombre",
         filterFn: "equalsString",
       },
       {
-        accessorKey: "Codigo",
+        accessorKey: "codigo_partida_e",
         label: "Código",
         cell: (info) => info.getValue(),
         filterFn: "includesStringSensitive",
       },
       {
-        accessorKey: "Descripcion",
+        accessorKey: "desc_partida_e",
         label: "Descripción",
         cell: (info) => info.getValue(),
         filterFn: "includesStringSensitive",
       },
       {
-        accessorKey: "Partida genérica",
-        label: "Descripción",
-        cell: (info) => info.getValue(),
-        filterFn: "includesStringSensitive",
-      },
-      {
-        accessorKey: "Estado",
+        accessorKey: "estado",
         label: "Estado",
         cell: (info) => (
           <span
             className={`px-2 py-1 rounded text-white ${
-              info.row.original.Estado === "Activa 0"
+              info.row.original.estado === "Activo"
                 ? "bg-customGreen"
                 : "bg-gray-500"
             }`}
           >
-            {info.row.original.Estado}
+            {info.row.original.estado}
           </span>
         ),
         filterFn: "includesStringSensitive",
       },
       {
-        accessorKey: "Acciones",
+        accessorKey: "acciones",
         label: "Acciones",
         cell: (info) => (
           <div>
             <Link
-              to={`/configuracion/catalogos/presupuestales/objetoGasto/partidaEspecifica/edit`}
+              to={`/configuracion/catalogos/presupuestales/objetoGasto/partidaEspecifica/edit/${info.row.original.id_partida_e}`}
               className="bg-customRed text-white px-2 py-1 rounded"
             >
               Ver/Editar
@@ -67,41 +64,40 @@ export default function PartidaEIndex() {
     []
   );
 
-  const data = React.useMemo(
-    () =>
-      Array.from({ length: 1000 }, (_, i) => ({
-        id: i,
-        Nombre: `Nombre ${i}`,
-        Codigo: `100${i}`,
-        Descripcion: `Coordinación de la politica de Gobierno, Relaciones exteriores, seguridad nacional, seguridad nacional, otros servicios... ${i}`,
-        Estado: `Activa ${i}`,
-        Acciones: `Ver/Editar`,
-      })),
-    []
-  );
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["obtenerPartidasEspecificas"],
+    queryFn: obtenerPartidasEspecificas,
+  });
+
+  if (isLoading) return <Spinner />;
+  if (error) return <div>Error al cargar las partidas específicas.</div>;
+
+  // Valida si los datos están vacíos
+  // if (!data || !data.partidas || data.partidas.length === 0) {
+  //   return <div>No hay datos para mostrar.</div>;
+  // }
 
   return (
     <>
       <Breadcrumb
         items={[
           { href: "/configuracion/menu", text: "CONFIGURACIÓN" },
-            { href: "/configuracion/catalogos/menu", text: "CATALOGOS" },
-            {
-              href: "/configuracion/catalogos/presupuestales",
-              text: "CATALOGOS PRESUPUESTALES",
-            },
-            {
-              href: "/configuracion/catalogos/presupuestales/objetoGasto",
-              text: "CLASIFICACIÓN POR OBJETO DE GASTO",
-            },
-            {
-             
-              text: "REGISTROS DE PARTIDAS ESPECIFICAS",
-            }
+          { href: "/configuracion/catalogos/menu", text: "CATALOGOS" },
+          {
+            href: "/configuracion/catalogos/presupuestales",
+            text: "CATALOGOS PRESUPUESTALES",
+          },
+          {
+            href: "/configuracion/catalogos/presupuestales/objetoGasto",
+            text: "CLASIFICACIÓN POR OBJETO DE GASTO",
+          },
+          {
+            text: "REGISTROS DE PARTIDAS ESPECÍFICAS",
+          },
         ]}
       />
-      <Regresar enlace='/configuracion/catalogos/presupuestales/objetoGasto'/>
-      <Titulo text={'REGISTROS DE PARTIDAS ESPECÍFICAS'} className="mt-14"/>
+      <Regresar enlace="/configuracion/catalogos/presupuestales/objetoGasto" />
+      <Titulo text={"REGISTROS DE PARTIDAS ESPECÍFICAS"} className="mt-14" />
       <div className="container mx-auto">
         <Link
           to="/configuracion/catalogos/presupuestales/objetoGasto/partidaEspecifica/create"
@@ -115,12 +111,14 @@ export default function PartidaEIndex() {
         </Link>
 
         <div className="flex flex-col w-full h-full mt-4 text-gray-700 bg-white shadow-md rounded-lg bg-clip-border mb-20">
-                <div className="bg-customRed rounded p-2">
-                    <h3 className="text-white font-bold">REGISTROS DE PARTIDAS ESPECÍFICAS</h3>
-                </div>
+          <div className="bg-customRed rounded p-2">
+            <h3 className="text-white font-bold">
+              REGISTROS DE PARTIDAS ESPECÍFICAS
+            </h3>
+          </div>
 
-                <CustomTable columns={columns} data={data} />
-            </div>
+          <CustomTable columns={columns} data={data.partidas} />
+        </div>
       </div>
     </>
   );

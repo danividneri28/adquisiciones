@@ -3,6 +3,7 @@ import Breadcrumb from '../../../components/Breadcrumb';
 import Titulo from '../../../components/Titulo';
 import CustomTable from '../../../components/CustomTable';
 import { Link } from 'react-router-dom';
+import Regresar from '../../../components/Regresar';
 
 const FacturasConsolidadosHistorialRegistros = () => {
     const columns = React.useMemo(
@@ -91,12 +92,7 @@ const FacturasConsolidadosHistorialRegistros = () => {
             />
             <div className='sm:flex sm:justify-between pt-3'>
                 <div>
-                    <a
-                        href="/funciones/facturas/consolidados/historial"
-                        className="block w-24 h-10 pl-2 mt-5 font-bold text-xl text-black cursor-pointer"
-                    >
-                        REGRESAR
-                    </a>
+                    <Regresar enlace="/funciones/facturas/consolidados/historial" />
                 </div>
                 <div className='grid justify-items-end list-none'>
                     <li><span className='font-bold text-customRed'>Oficio de Autorización: </span> <button className='bg-customRed px-6 rounded-xl m-1 text-white'>Ver PDF</button> </li>

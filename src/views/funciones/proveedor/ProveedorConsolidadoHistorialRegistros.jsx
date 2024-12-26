@@ -3,6 +3,7 @@ import Breadcrumb from '../../../components/Breadcrumb'
 import CustomTable from '../../../components/CustomTable'
 import Titulo from '../../../components/Titulo'
 import { Link } from 'react-router-dom'
+import Regresar from '../../../components/Regresar'
 
 const ProveedorConsolidadoHistorialRegistros = () => {
     const columns = React.useMemo(
@@ -91,17 +92,12 @@ const ProveedorConsolidadoHistorialRegistros = () => {
             />
             <div className='sm:flex sm:justify-between pt-3'>
                 <div>
-                    <a
-                        href="/funciones/proveedor/consolidados/historial"
-                        className="block w-24 h-10 pl-2 mt-5 font-bold text-xl text-black cursor-pointer"
-                    >
-                        REGRESAR
-                    </a>
+                    <Regresar enlace='/funciones/proveedor/consolidados/historial' />
                 </div>
-                <div>
-                    <li>Oficio de Autorización</li>
-                    <li>Oficio de Justificación</li>
-                    <li>Contrato</li>
+                <div  className='grid justify-items-end list-none'>
+                    <li><span className='font-bold text-customRed'>Oficio de Autorización: </span> <button className='bg-customRed px-6 rounded-xl m-1 text-white'>Ver PDF</button> </li>
+                    <li><span className='font-bold text-customRed'>Oficio de Justificación: </span> <button className='bg-customRed px-6 rounded-xl m-1 text-white'>Ver PDF</button> </li>
+                    <li><span className='font-bold text-customRed'>Contrato: </span> <button className='bg-customRed px-6 rounded-xl m-1 text-white'>Ver PDF</button> </li> 
                 </div>
             </div>
             <Titulo text={"REGISTROS DE CONSOLIDADOS"} className='mb-28' />

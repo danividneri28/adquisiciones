@@ -5,11 +5,14 @@ import Titulo from '../../../../../components/Titulo'
 import { Link } from 'react-router-dom'
 import CustomTable from '../../../../../components/CustomTable'
 import Regresar from '../../../../../components/Regresar'
+import Spinner from '../../../../../components/Spinner'
+import { useQuery } from '@tanstack/react-query'
+import { getSubfunciones } from '../../../../../api/configuracion/ApiSubfuncion'
 
 const IndexSubfuncion = () => {
     const columns = React.useMemo(() => [
         {
-            accessorKey: "nombre",
+            accessorKey: "nombre_subfuncion",
             label: "Nombre",
             filterFn: "equalsString",
         },
@@ -20,13 +23,13 @@ const IndexSubfuncion = () => {
             filterFn: "includesStringSensitive",
         },
         {
-            accessorKey: "codigo",
+            accessorKey: "codigo_subfuncion",
             label: "Código",
             cell: (info) => info.getValue(),
             filterFn: "includesStringSensitive",
         },
         {
-            accessorKey: "funcion",
+            accessorKey: "funcion.nombre_funcion",
             label: "Función",
             cell: (info) => info.getValue(),
             filterFn: "includesStringSensitive",
@@ -37,23 +40,23 @@ const IndexSubfuncion = () => {
             cell: (info) => (
                 <span
                     className={`px-1 block py-1 rounded text-white text-xs ${
-                        info.row.original.estado === "Activa 0"
+                        info.getValue() === "Activo"
                             ? "bg-customGreen"
                             : "bg-customRed"
                     }`}
                 >
-                    {info.row.original.estado}
+                    {info.getValue()}
                 </span>
             ),
             filterFn: "includesStringSensitive",
         },
         {
-            accessorKey: "acciones",
+            accessorKey: "id_subfuncion",
             label: "Acciones",
             cell: (info) => (
                 <div>
                     <Link
-                        to={`/configuracion/catalogos/programaticos/editar/subfuncion/${info.row.original.id}`}
+                        to={`/configuracion/catalogos/programaticos/editar/subfuncion/${info.getValue()}`}
                         className="bg-customRed text-white px-2 py-1 rounded text-xs"
                     >
                         Ver/Editar
@@ -64,27 +67,34 @@ const IndexSubfuncion = () => {
         }
     ],[] );
 
-    const data = React.useMemo(() => Array.from({ length: 1000 }, (_, i) => ({
-        id: i,
-        nombre: "Nombre",
-        descripcion: "Coordinación de la politica de Gobierno, Relaciones exteriores, seguridad nacional, seguridad nacional, otros servicios... 0",
-        codigo: "Código",
-        funcion: "Función",
-        estado: "Activa 0",
-    })),[]);
+    const { data, isLoading } = useQuery({
+        queryKey: ["getSubfunciones"],
+        queryFn: getSubfunciones,
+      });
+
+
+  const dataTable = React.useMemo(() => {
+    if (data) return data.data;
+    return [];
+  }, [data]);
+  if (isLoading) return <Spinner />;
+  if (data.success)
 
     return (
         <>
             <Breadcrumb
                 items={[
-                    { href: "/home", text: "CONFIGURACIÓN" },
-                    { href: "/home", text: "CATÁLAGOS" },
-                    { href: "/home", text: "CATÁLAGOS PROGRAMÁTICOS" },
+                    { href: "../../menu", text: "CONFIGURACIÓN" },
+                    { href: "../../catalogos/menu", text: "CATÁLAGOS" },
+                    {
+                      href: "../../menu/catalogos/programaticos",
+                      text: "CATÁLAGOS PROGRAMÁTICOS",
+                    },
                     { text: "REGISTRO DE SUBFUNCIONES" },
                 ]}
             />
 
-            <Regresar enlace='/home'/>
+            <Regresar enlace="../menu/catalogos/programaticos" />
             
             <Titulo text="REGISTRO DE SUBFUNCIONES" />
 
@@ -101,7 +111,7 @@ const IndexSubfuncion = () => {
                     <h3 className="text-white font-bold">REGISTROS DE SUBFUNCIONES</h3>
                 </div>
 
-                <CustomTable columns={columns} data={data} />
+                <CustomTable columns={columns} data={dataTable} />
             </div>
         </>
     )

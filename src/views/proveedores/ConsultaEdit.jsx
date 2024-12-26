@@ -4,6 +4,7 @@ import Breadcrumb from "../../components/Breadcrumb";
 import Titulo from "../../components/Titulo";
 import Select from 'react-select'
 import PDF from "../../assets/images/funciones/proveedores/boton-pdf.png";
+import Regresar from "../../components/Regresar";
 
 
 const options = [
@@ -30,12 +31,16 @@ const EditaProveedor = () => {
             <div>
                 <Breadcrumb
                     items={[
-                        { href: "", text: "FUNCIONES" },
-                        { href: "", text: "REGISTRO DE PROVEEDORES" },
-                        { href: "", text: "CONSULTA DE PROVEEDORES" },
-                        { href: "", text: "REGISTRO DE PROVEEDOR" },
+                        { href: "/funciones", text: "FUNCIONES" },
+                        { href: "/funciones/proveedores/create", text: "REGISTRO DE PROVEEDORES" },
+                        { href: "/funciones/consultaproveedores/consulta-proveedor", text: "CONSULTA DE PROVEEDORES" },
+                        { text: "REGISTRO DE PROVEEDOR" },
                     ]}
                 />
+
+            <Regresar enlace="/funciones/proveedores/create" />
+                
+
                 <Titulo text={'REGISTRO DE PROVEEDOR'} className='mt-14' />
                 <div className="bg-gray-100  mt-8 rounded-lg">
                     <div className="rounded p-3 mb-1"

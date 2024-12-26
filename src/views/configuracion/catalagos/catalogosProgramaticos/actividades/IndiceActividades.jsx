@@ -1,12 +1,20 @@
 import React, { useMemo } from 'react'
 import Breadcrumb from '../../../../../components/Breadcrumb'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import Titulo from '../../../../../components/Titulo'
 import imgNuevActividad from '../../../../../assets/images/configuracion/programaticos/nuevaActividad.png'
 import CustomTable from '../../../../../components/CustomTable'
 import Regresar from '../../../../../components/Regresar'
+import { useQuery } from '@tanstack/react-query'
+import { getActividades } from '../../../../../api/configuracion/catalogos/programaticos/ActividadesApi'
+import Spinner from '../../../../../components/Spinner'
 
 const IndiceActividades = () => {
+
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ['obtenerActividades'],
+        queryFn: getActividades,
+    })
 
     const columns = useMemo(() => [
         {
@@ -27,23 +35,25 @@ const IndiceActividades = () => {
             filterFn: "includesStringSensitive",
         },
         {
-            accessorKey: "tipo",
+            accessorKey: "tipo_actividad",
             label: "Tipo de actividad",
             cell: (info) => (
                 <span
                     className={`px-1 py-1 rounded text-white text-xs ${
-                        info.row.original.tipo === "Plan de desarrollo"
+                        info.row.original.tipo_actividad === "Plan de desarrollo"
+                            ? "bg-customBlue"
+                            : info.row.original.tipo_actividad === "Compromiso"
                             ? "bg-customGreen"
-                            : "bg-customBlue"
+                            : "bg-gray-500"
                     }`}
                 >
-                    {info.row.original.tipo}
+                    {info.row.original.tipo_actividad}
                 </span>
             ),
             filterFn: "includesStringSensitive",
         },
         {
-            accessorKey: "year",
+            accessorKey: "anio",
             label: "Año",
             cell: (info) => info.getValue(),
             filterFn: "includesStringSensitive",
@@ -54,7 +64,7 @@ const IndiceActividades = () => {
             cell: (info) => (
                 <span
                     className={`px-1 py-1 rounded text-white text-xs ${
-                        info.row.original.estado === "Activa 0"
+                        info.row.original.estado === "Activo"
                             ? "bg-customGreen"
                             : "bg-customRed"
                     }`}
@@ -70,7 +80,7 @@ const IndiceActividades = () => {
             cell: (info) => (
                 <div>
                     <Link
-                        to={`/configuracion/catalogos/programaticos/editar/actividad/${info.row.original.id}`}
+                        to={`/configuracion/catalogos/programaticos/editar/actividad/${info.getValue()}`}
                         className="bg-customRed text-white px-2 py-1 rounded text-xs"
                     >
                         Ver/Editar
@@ -81,28 +91,25 @@ const IndiceActividades = () => {
         }
     ],[] );
 
-    const data = useMemo(() => [
-        {
-            id: 1,
-            nombre: "Nombre 1",
-            descripcion: "Descripción 1",
-            codigo: "01",
-            tipo: "Plan de desarrollo",
-            year: "2021",
-            estado: "Activa 0",
-            acciones: "Ver/Editar",
-        },
-        {
-            id: 2,
-            nombre: "Nombre 2",
-            descripcion: "Descripción 2",
-            codigo: "02",
-            tipo: "Compromiso",
-            year: "2022",
-            estado: "Activa 1",
-            acciones: "Ver/Editar",
-        },
-    ],[] );
+    const dataTable = useMemo(() => {
+            if (data) {
+                return data.map((item) => {
+                    return {
+                        nombre: item.nombre,
+                        descripcion: item.descripcion,
+                        codigo: item.codigo_completo,
+                        tipo_actividad: item?.tipo_actividad?.nombre,
+                        anio: item.anio,
+                        estado: item.estado,
+                        acciones: item.id,
+                    };
+                });
+            }
+            return [];
+        }, [data]);
+
+    if (isLoading) return <Spinner />
+    if (isError) return <Navigate to="/404" />
 
     return (
         <>
@@ -132,7 +139,7 @@ const IndiceActividades = () => {
                     <h3 className="text-white font-bold">REGISTRO DE ACTIVIDADES</h3>
                 </div>
 
-                <CustomTable columns={columns} data={data} />
+                <CustomTable columns={columns} data={dataTable} />
             </div>
         </>
     )

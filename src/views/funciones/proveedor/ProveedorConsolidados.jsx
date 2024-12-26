@@ -4,6 +4,7 @@ import Breadcrumb from "../../../components/Breadcrumb";
 import Titulo from "../../../components/Titulo";
 import CustomTable from "../../../components/CustomTable";
 import HistorialConsolidados from "../../../assets/images/funciones/proveedorContrato/historialConsolidados.png";
+import Regresar from "../../../components/Regresar";
 
 
 const ProveedorConsolidados = () => {
@@ -106,12 +107,7 @@ const ProveedorConsolidados = () => {
           {text: "APARTADO DE CONSOLIDADOS"},
       ]}
       />
-      <a
-      href="/funciones/proveedor/listado"
-      className="block w-24 h-10 pl-2 mt-5 font-bold text-xl text-black cursor-pointer"
-      >
-      REGRESAR
-      </a>
+      <Regresar enlace="/funciones/proveedor/listado" />
       <Titulo text={"APARTADO DE CONSOLIDADOS"} />
       <div>
       <div className="flex justify-between">

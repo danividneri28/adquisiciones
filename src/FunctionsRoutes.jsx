@@ -27,6 +27,7 @@ import ProcedAdminView from "./views/funciones/procedimientos_administrativo/Pro
 // import ProcedAdminUpdate from "./views/funciones/ProcedAdminUpdate";
 // PAGOS
 import PagosIndex from "./views/funciones/pagos/PagosIndex";
+import PagosUpdate from "./views/funciones/pagos/PagosUpdate";
 
 
 import EntregableIndex from "./views/funciones/entregable/EntregableIndex";
@@ -94,6 +95,7 @@ export default function FunctionsRoutes() {
 
             {/* Pagos */}
             <Route path="pagos/listado" element={<PagosIndex />} />
+            <Route path="pagos/editar" element={<PagosUpdate />} />
 
             {/* Entregables */}
             <Route path="/entregable/listado" element={<EntregableIndex />} />

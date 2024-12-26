@@ -6,11 +6,13 @@ import Breadcrumb from '../../Breadcrumb';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { crearUsuario, editarUsuario } from '../../../api/configuracion/ApiUsers';
 import FormUsuarios from './FormUsuarios';
+import AlertSuccess from '../../AlertSuccess';
+import { onError } from '../../../utils/onError';
 
 const EditUserForm = ({ data, projectId } ) => {
     const [isEditing, setIsEditing] = useState(false);
-    const navigate = useNavigate();
-    
+    const [showSuccess, setShowSuccess] = useState(false);
+
     const handleEditClick = (e) => {
         e.preventDefault();
         setIsEditing(!isEditing);
@@ -27,17 +29,17 @@ const EditUserForm = ({ data, projectId } ) => {
         estado: data.estado,
     }
 
-    const { register, handleSubmit, formState: { errors }} = useForm({ defaultValues });
+    const { register, handleSubmit, formState: { errors }, setError} = useForm({ defaultValues });
 
     const queryClient = useQueryClient();
     const { mutate } = useMutation({
         mutationFn: editarUsuario,
         onError: (error) => {
-            console.log(error);
+            onError(error, setError);
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries('obtenerUsuarios');
-            navigate('/configuracion/usuarios/listado');
+            setShowSuccess(true);
         }
     })
 
@@ -51,6 +53,7 @@ const EditUserForm = ({ data, projectId } ) => {
     }
     return (
         <>
+            { showSuccess && <AlertSuccess route='/configuracion/usuarios/listado' /> }
             <Breadcrumb
                 items={[
                     { href: "/configuracion/menu", text: "CONFIGURACIÓN" },

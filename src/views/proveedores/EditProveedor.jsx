@@ -9,9 +9,9 @@ const ProveedoresNew = () => {
         <Breadcrumb
           items={
             [
-              { href: "/configuracion/menu", text: "FUNCIONES" },
-              { href: "/configuracion/catalogos/menu", text: "REGISRO DE PROVEEDORES" },
-              { href: "/configuracion/catalogos/presupuestales", text: "REGISTRO DE PROVEEDOR" }
+              { href: "/funciones", text: "FUNCIONES" },
+              { href: "/funciones/proveedores/create", text: "REGISRO DE PROVEEDORES" },
+              { text: "REGISTRO DE PROVEEDOR" }
              ]
           }
         />

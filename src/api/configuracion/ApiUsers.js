@@ -19,6 +19,7 @@ export async function obtenerUsuario(id) {
     try {
         const url = `/configuracion/usuario/${id}`;
         const { data } = await api.get(url);
+
         return data;
     } catch (error) {
         if (isAxiosError(error) && error.response) {
@@ -35,7 +36,7 @@ export async function crearUsuario(formData) {
         return data;
     } catch (error) {
         if (isAxiosError(error) && error.response) {
-            throw new Error(error.response.data.error);
+            throw error.response.data;
         }
     }
 }
@@ -48,7 +49,7 @@ export async function editarUsuario(formData) {
         return data;
     } catch (error) {
         if (isAxiosError(error) && error.response) {
-            throw new Error(error.response.data.error);
+            throw error.response.data;
         }
     }
 }

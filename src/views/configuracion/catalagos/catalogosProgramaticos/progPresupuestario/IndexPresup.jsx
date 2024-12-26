@@ -1,12 +1,21 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Breadcrumb from '../../../../../components/Breadcrumb';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import Titulo from '../../../../../components/Titulo';
 import imgNuevoPresuspuestarios from '../../../../../assets/images/configuracion/programaticos/nuevoProgPresupuestario.png';
 import CustomTable from '../../../../../components/CustomTable';
 import Regresar from '../../../../../components/Regresar';
+import {obtenerProgramasPresupuestarios} from '../../../../../api/configuracion/ApiProgramaPresupuestario'
+import { useQuery } from '@tanstack/react-query';
+import Spinner from '../../../../../components/Spinner';
 
 const IndexPresup = () => {
+
+    const  { data, isLoading, isError } = useQuery({
+        queryKey: ['obtenerProgramasPresupuestarios'],
+        queryFn: obtenerProgramasPresupuestarios,
+    });
+
     const columns = useMemo(() => [
         {
             accessorKey: "nombre",
@@ -30,10 +39,8 @@ const IndexPresup = () => {
             label: "Estado",
             cell: (info) => (
                 <span
-                    className={`px-1 py-1 rounded text-white text-xs ${
-                        info.row.original.estado === "Activa 0"
-                            ? "bg-customGreen"
-                            : "bg-customRed"
+                    className={`p-2 rounded text-white text-xs ${
+                        info.row.original.estado === "Activa" ? "bg-customGreen" : "bg-gray-400"
                     }`}
                 >
                     {info.row.original.estado}
@@ -42,12 +49,12 @@ const IndexPresup = () => {
             filterFn: "includesStringSensitive",
         },
         {
-            accessorKey: "acciones",
+            accessorKey: "Acciones",
             label: "Acciones",
             cell: (info) => (
                 <div>
                     <Link
-                        to={`/configuracion/catalogos/programaticos/editar/progPresupuestario/${info.row.original.id}`}
+                        to={`/configuracion/catalogos/programaticos/editar/progPresupuestario/${info.getValue()}`}
                         className="bg-customRed text-white px-2 py-1 rounded text-xs"
                     >
                         Ver/Editar
@@ -58,26 +65,37 @@ const IndexPresup = () => {
         }
     ],[] );
 
-    const data = useMemo(() => Array.from({ length: 1000 }, (_, i) => ({
-        id: i,
-        nombre: "Nombre",
-        codigo: "Código",
-        subfuncion: "Subfunción",
-        estado: "Activa 0",
-    })), []);
-
+    const dataTable = useMemo(() => {
+        if(data){
+            return data.map((item)=>{
+            //    console.log(item);
+                return{
+                    nombre: item.nombre_presupuestario,
+                    codigo: item.codigo_concatenado,
+                    subfuncion:item.subfuncion.nombre_subfuncion,
+                    estado: item.estado == "Activo" ? "Activa" : "Inactiva",
+                    Acciones: item.id_programa_prespuestario,
+                };
+            });
+        }
+        return [];
+    }, [data]);
+    
+    if (isLoading) return <Spinner />;
+    if (isError) return <Navigate to="/404" />;
+    
     return (
         <>
             <Breadcrumb
                 items={[
-                    { href: "/home", text: "CONFIGURACIÓN" },
-                    { href: "/home", text: "CATÁLAGOS" },
-                    { href: "/home", text: "CATÁLAGOS PROGRAMÁTICOS" },
+                    { href: "/configuracion/menu", text: "CONFIGURACIÓN" },
+                    { href: "/configuracion/catalogos/menu", text: "CATÁLAGOS" },
+                    { href: "/configuracion/menu/catalogos/programaticos", text: "CATÁLAGOS PROGRAMÁTICOS" },
                     { text: "REGISTRO DE PROGRAMAS PRESUPUESTARIOS" },
                 ]}
             />
 
-            <Regresar enlace='/home'/>
+            <Regresar enlace='/configuracion/menu/catalogos/programaticos'/>
             
             <Titulo text="REGISTRO DE PROGRAMAS PRESUPUESTARIOS" />
 
@@ -94,7 +112,7 @@ const IndexPresup = () => {
                     <h3 className="text-white font-bold">REGISTRO DE PROGRAMAS PRESUPUESTARIOS</h3>
                 </div>
 
-                <CustomTable columns={columns} data={data} />
+                <CustomTable columns={columns} data={dataTable} />
             </div>
         </>
     )

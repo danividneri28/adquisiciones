@@ -5,6 +5,7 @@ import Titulo from "../../../components/Titulo";
 import CustomTable from "../../../components/CustomTable";
 import imgConsolidados from "../../../assets/images/funciones/entregable/apartado_consolidados.png"
 import imgHistorial from "../../../assets/images/funciones/entregable/historial.png"
+import Regresar from "../../../components/Regresar";
 
 export default function EntregableIndex() {
    const columns = React.useMemo(
@@ -114,7 +115,7 @@ export default function EntregableIndex() {
 					]}
 				/>
 
-				<Link to="/funciones" className="block w-24 h-10 pl-2 mt-5 font-bold text-xl text-black cursor-pointer">REGRESAR</Link>
+				  <Regresar enlace='/funciones'/>
 
 				<Titulo text="REGISTRO DE ENTREGABLES" />
 				<div className=" grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3">
@@ -223,7 +224,7 @@ export default function EntregableIndex() {
 						</div>
 					</div>
 					<div className="text-center">
-						<Link to="/funciones/entregable/historial" className=" inline-block mt-2" >
+						<Link to="" className=" inline-block mt-2" >
 							<img 
 								src={imgHistorial} 
 								alt="Historial"

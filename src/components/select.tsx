@@ -7,18 +7,18 @@ interface CustomSelectProps
     HTMLSelectElement
   > {
   name: string;
-  maxLength?: number;
   valueAsNumber?: boolean;
   label?: string;
   required?: boolean;
   errors: object;
   data: any[];
+  classNameContainer?:string;
   register: UseFormRegister<any>;
   renderItem: (x: any) => React.ReactElement;
 }
 const Select = ({
+  classNameContainer,
   label = "Campo",
-  maxLength,
   data,
   valueAsNumber,
   name,
@@ -29,7 +29,7 @@ const Select = ({
   ...props
 }: CustomSelectProps) => {
   return (
-    <div>
+    <div className={classNameContainer}>
       <label className="block text-sm font-medium text-white">
         {(required ? "*" : "") + label}:
       </label>
@@ -37,18 +37,12 @@ const Select = ({
       <select
         className={`mt-1 block w-full rounded-md ${
           errors[name] ? "border-2" : ""
-        } border-red-500 shadow-sm focus:ring-black focus:border-ring-black p-3 sm:text-sm`}
+        } border-red-500 shadow-sm focus:ring-black focus:border-ring-black p-3 sm:text-sm  ${props.className}`}
         defaultValue=""
         {...props}
         {...register(name, {
           required: { value: required, message: "Campo vacío" },
           valueAsNumber,
-          maxLength: maxLength
-            ? {
-                value: maxLength,
-                message: `El campo "${label}" no debe contener más de ${maxLength} caracteres.`,
-              }
-            : undefined,
         })}
       >
         <option value="" disabled>

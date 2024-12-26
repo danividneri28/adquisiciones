@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Breadcrumb from "../../components/Breadcrumb";
 import Titulo from "../../components/Titulo";
 import Select from 'react-select'
+import Regresar from "../../components/Regresar";
 
 
 const options = [
@@ -19,18 +20,14 @@ const EditaProveedor = () => {
             <div>
                 <Breadcrumb
                     items={[
-                        { href: "", text: "FUNCIONES" },
-                        { href: "", text: "REGISTRO DE PROVEEDORES" },
-                        { href: "", text: "REGISTRO DE PROVEEDOR" },
+                        { href: "/funciones", text: "FUNCIONES" },
+                        { href: "/funciones/proveedores/create", text: "REGISTRO DE PROVEEDORES" },
+                        { text: "REGISTRO DE PROVEEDOR" },
                     ]}
                 />
                 
-                <a
-                href="/home"
-                className="block w-24 h-10 pl-2 mt-5 font-bold text-xl text-black cursor-pointer"
-                >
-                REGRESAR
-                </a>
+            <Regresar enlace="/funciones/proveedores/create" />
+            
 
                 <Titulo text={'REGISTRO DE PROVEEDOR'} className='mt-14' />
                 <div className="bg-gray-100  mt-8 rounded-lg">

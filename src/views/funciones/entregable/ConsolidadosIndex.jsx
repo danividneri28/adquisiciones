@@ -4,6 +4,7 @@ import Breadcrumb from "../../../components/Breadcrumb";
 import Titulo from "../../../components/Titulo";
 import CustomTable from "../../../components/CustomTable";
 import imgHistorial from "../../../assets/images/funciones/entregable/historial_consolidados.png";
+import Regresar from "../../../components/Regresar";
 
 
 export default function ConsolidadosIndex() {
@@ -97,14 +98,12 @@ export default function ConsolidadosIndex() {
                     { text: "APARTADO DE CONSOLIDADOS"}
                 ]}
             />
-
-            <Link to="/funciones/entregable/listado" className="block w-24 h-10 pl-2 mt-10 font-bold text-xl text-black cursor-pointer">REGRESAR</Link>
+              <Regresar enlace='/funciones/entregable/listado'/>
 
             <Titulo text="APARTADO DE CONSOLIDADOS" />
         
             <div className="md:text-end md:-mt-20  sm: text-center sm: mt-5">
-                <Link to="
-                " className=" inline-block mt-2" >
+                <Link to="/funciones/entregable/historial" className=" inline-block mt-2" >
                     <img 
                         src={imgHistorial} 
                         alt="Apartado de Consolidados"

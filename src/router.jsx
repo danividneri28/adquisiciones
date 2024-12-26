@@ -7,6 +7,9 @@ import LoginView from "./views/auth/LoginView";
 import AuthLayout from "./layout/AuthLayout";
 import NoEncontrado from "./views/HttpError/NoEncontrado";
 import Home from "./views/MesaControl"
+import Tutorials from "./Tutorials";
+import RememberPassword from "./views/auth/RememberPassword";
+import PasswordEmail from "./views/auth/RememberPassword";
 
 export default function Router() {
   return (
@@ -23,10 +26,18 @@ export default function Router() {
 
           {/* Configuracion */}
           <Route path="configuracion/*" element={<ConfigRoutes />} />
+
+          
+          {/* Tutoriales */}
+          <Route path="tutoriales/*" element={<Tutorials />} />
+        
         </Route>
 
+        
         <Route element={ <AuthLayout /> }>
           <Route path="/auth/login" element={ <LoginView /> } />
+          <Route path="/auth/remember-password" element={ <RememberPassword /> } />
+          <Route path="/auth/password-email" element={ <PasswordEmail /> } />
         </Route>
 
         {/* Errores */}

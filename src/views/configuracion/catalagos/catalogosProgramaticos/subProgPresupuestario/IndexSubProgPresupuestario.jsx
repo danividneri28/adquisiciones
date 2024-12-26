@@ -1,12 +1,27 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import Breadcrumb from '../../../../../components/Breadcrumb'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import Titulo from '../../../../../components/Titulo'
 import nuevoSubProgPresupuestario from '../../../../../assets/images/configuracion/programaticos/subprogPresupuestario.png'
 import CustomTable from '../../../../../components/CustomTable'
 import Regresar from '../../../../../components/Regresar'
+import {getSubProgramas,getProgramasPresupuestarios} from '../../../../../api/configuracion/ApiSubProgramaPresupuestario'
+import Spinner from '../../../../../components/Spinner'
+import { useQuery } from '@tanstack/react-query'
 
 const IndexSubProgPresupuestario = () => {
+    
+    const { data: programasPresupuestariosData, isLoading: programasPresupuestariosLoading, isError: programasPresupuestariosError } = useQuery({
+            queryKey: ['programasPresupuestarios'],
+            queryFn: getProgramasPresupuestarios
+        });
+    
+        const  { data, isLoading, isError } = useQuery({
+        queryKey: ['getSubProgramas'],
+        queryFn: getSubProgramas,
+    });
+
+    
     const columns = useMemo(() => [
         {
             accessorKey: "nombre",
@@ -30,10 +45,8 @@ const IndexSubProgPresupuestario = () => {
             label: "Estado",
             cell: (info) => (
                 <span
-                    className={`px-1 py-1 rounded text-white text-xs ${
-                        info.row.original.estado === "Activa 0"
-                            ? "bg-customGreen"
-                            : "bg-customRed"
+                    className={`p-2 rounded text-white text-xs ${
+                        info.row.original.estado === "Activo" ? "bg-customGreen" : "bg-gray-400"
                     }`}
                 >
                     {info.row.original.estado}
@@ -47,7 +60,7 @@ const IndexSubProgPresupuestario = () => {
             cell: (info) => (
                 <div>
                     <Link
-                        to={`/configuracion/catalogos/programaticos/editar/subprogPresupuestario/${info.row.original.id}`}
+                        to={`/configuracion/catalogos/programaticos/editar/subprogPresupuestario/${info.getValue()}`}
                         className="bg-customRed text-white px-2 py-1 rounded text-xs"
                     >
                         Ver/Editar
@@ -58,26 +71,36 @@ const IndexSubProgPresupuestario = () => {
         }
     ],[] );
 
-    const data = useMemo(() => Array.from({ length: 1000 }, (_, i) => ({
-        id: i,
-        nombre: "Nombre",
-        codigo: "Código",
-        progrma: "Programa",
-        estado: "Activa 0",
-    })), []);
+    const dataTables = useMemo(() => {
+        if (data) {
+            return data.map((item)=>{
+               console.log(item);
+                return{
+                    nombre: item.nombre,
+                    codigo: item.codigo_concatenado,
+                    progrma: item.programa_presupuestario.nombre_presupuestario,
+                    estado: item.estado == 'Activo' ? "Activo" : "Inactiva",
+                    acciones: item.id_sub_presupuestario,
+                };
+            });
+        }
+       return [];
+    }, [data]);
 
+    if (isLoading || programasPresupuestariosLoading) return <Spinner />;
+    if (isError) return <Navigate to="/404" />;
     return (
         <>
             <Breadcrumb
                 items={[
-                    { href: "/home", text: "CONFIGURACIÓN" },
-                    { href: "/home", text: "CATÁLAGOS" },
-                    { href: "/home", text: "CATÁLAGOS PROGRAMÁTICOS" },
+                    { href: "/configuracion/menu", text: "CONFIGURACIÓN" },
+                    { href: "/configuracion/catalogos/menu", text: "CATÁLAGOS" },
+                    { href: "/configuracion/menu/catalogos/programaticos", text: "CATÁLAGOS PROGRAMÁTICOS" },
                     { text: "REGISTRO DE SUBPROGRAMAS PRESUPUESTARIOS" },
                 ]}
             />
 
-           <Regresar enlace='/home'/>
+           <Regresar enlace='/configuracion/menu/catalogos/programaticos'/>
             
             <Titulo text="REGISTRO DE SUBPROGRAMAS PRESUPUESTARIOS" />
 
@@ -94,7 +117,7 @@ const IndexSubProgPresupuestario = () => {
                     <h3 className="text-white font-bold">REGISTRO DE SUBPROGRAMAS PRESUPUESTARIOS</h3>
                 </div>
 
-                <CustomTable columns={columns} data={data} />
+                <CustomTable columns={columns} data={dataTables} />
             </div>
         </>
     )

@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom'
 const AuthLayout = () => {
     return (
         <div className='bg-customRed flex justify-center'>
-            <div className='flex justify-center items-center text-black w-full md:w-1/2 h-screen p-10'>
+            <div className='flex items-center text-black w-[95%] md:w-[60%] h-screen'>
                 <Outlet />
             </div>
         </div>

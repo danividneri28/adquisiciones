@@ -12,14 +12,11 @@ import MenuCatalogos from './views/configuracion/catalagos/MenuCatalogos';
 import MenuCatalogosProgramaticos from './views/configuracion/catalagos/catalogosProgramaticos/MenuCatalogosProgramaticos';
 import IndexFinalidad from './views/configuracion/catalagos/catalogosProgramaticos/Finalidad/IndexFinalidad';
 import NuevaFinalidad from './views/configuracion/catalagos/catalogosProgramaticos/Finalidad/NuevaFinalidad';
-import EditarFinalidad from './views/configuracion/catalagos/catalogosProgramaticos/Finalidad/EditarFinalidad';
 import IndexFuncion from './views/configuracion/catalagos/catalogosProgramaticos/funcion/IndexFuncion';
 import NuevaFuncion from './views/configuracion/catalagos/catalogosProgramaticos/funcion/NuevaFuncion';
-import EditarFuncion from './views/configuracion/catalagos/catalogosProgramaticos/funcion/EditarFuncion';
 
 import IndexSubfuncion from './views/configuracion/catalagos/catalogosProgramaticos/subfuncion/IndexSubfuncion';
 import NuevaSubfuncion from './views/configuracion/catalagos/catalogosProgramaticos/subfuncion/NuevaSubfuncion';
-import EditarSubfuncion from './views/configuracion/catalagos/catalogosProgramaticos/subfuncion/EditarSubfuncion';
 
 import IndexPresup from './views/configuracion/catalagos/catalogosProgramaticos/progPresupuestario/IndexPresup';
 
@@ -98,17 +95,17 @@ export default function ConfigRoutes() {
       {/* Finalidad */}
       <Route path="catalogos/programaticos/finalidad" element={<IndexFinalidad />} />
       <Route path="catalogos/programaticos/nueva/finalidad" element={<NuevaFinalidad />} />
-      <Route path="catalogos/programaticos/editar/finalidad/:id" element={<EditarFinalidad />} />
+      <Route path="catalogos/programaticos/editar/finalidad/:id" element={<NuevaFinalidad />} />
 
       {/* Funcion */}
       <Route path="catalogos/programaticos/funcion" element={<IndexFuncion />} />
       <Route path="catalogos/programaticos/nueva/funcion" element={<NuevaFuncion />} />
-      <Route path="catalogos/programaticos/editar/funcion/:id" element={<EditarFuncion />} />
+      <Route path="catalogos/programaticos/editar/funcion/:id" element={<NuevaFuncion />} />
 
       {/* Subfuncion */}
       <Route path="catalogos/programaticos/subfuncion" element={<IndexSubfuncion />} />
       <Route path="catalogos/programaticos/nueva/subfuncion" element={<NuevaSubfuncion />} />
-      <Route path="catalogos/programaticos/editar/subfuncion/:id" element={<EditarSubfuncion />} />
+      <Route path="catalogos/programaticos/editar/subfuncion/:id" element={<NuevaSubfuncion />} />
 
       {/* Programa presupuestario */}
       <Route path="catalogos/programaticos/programaPresupuestario" element={<IndexPresup />} />
@@ -138,42 +135,42 @@ export default function ConfigRoutes() {
       
       <Route path="catalogos/presupuestales/objetoGasto/capitulo" element={<CapituloIndex />} />
       <Route path="catalogos/presupuestales/objetoGasto/capitulo/create" element={<CapituloCreate />} />
-      <Route path="catalogos/presupuestales/objetoGasto/capitulo/edit" element={<CapituloEdit />} />
+      <Route path="catalogos/presupuestales/objetoGasto/capitulo/edit/:id" element={<CapituloEdit />} />
       
       {/* Subcapitulo */}
       <Route path="catalogos/presupuestales/objetoGasto/subcapitulo" element={<SubCapituloIndex />} />
       <Route path="catalogos/presupuestales/objetoGasto/subcapitulo/create" element={<SubCapituloCreate />} />
-      <Route path="catalogos/presupuestales/objetoGasto/subcapitulo/edit" element={<SubCapituloEdit />} />
+      <Route path="catalogos/presupuestales/objetoGasto/subcapitulo/edit/:id" element={<SubCapituloEdit />} />
 
       {/* Partida Generica */}
       <Route path="catalogos/presupuestales/objetoGasto/partidaGenerica" element={<PartidaGIndex />} />
       <Route path="catalogos/presupuestales/objetoGasto/partidaGenerica/create" element={<PartidaGcreate />} />
-      <Route path="catalogos/presupuestales/objetoGasto/partidaGenerica/edit" element={<PartidaGedit />} />
+      <Route path="catalogos/presupuestales/objetoGasto/partidaGenerica/:id" element={<PartidaGedit />} />
       
       {/* Partida Especifica */}
       <Route path="catalogos/presupuestales/objetoGasto/partidaEspecifica" element={<PartidaEIndex />} />
       <Route path="catalogos/presupuestales/objetoGasto/partidaEspecifica/create" element={<PartidaEcreate />} />
-      <Route path="catalogos/presupuestales/objetoGasto/partidaEspecifica/edit" element={<PartidaEEdit />} />
+      <Route path="catalogos/presupuestales/objetoGasto/partidaEspecifica/edit/:id" element={<PartidaEEdit />} />
       
       {/* Tipo del Gasto */}
       <Route path="catalogos/presupuestales/tipoGasto" element={<TipoGastoIndex />} />
       <Route path="catalogos/presupuestales/tipoGasto/create" element={<TipoGastoCreate />} />
-      <Route path="catalogos/presupuestales/tipoGasto/edit" element={<TipoGastoEdit />} />
+      <Route path="catalogos/presupuestales/tipoGasto/edit/:id" element={<TipoGastoEdit />} />
       
       {/* clasificacion funcional */}
       <Route path="catalogos/presupuestales/clasificacionFuncional" element={<ClasificacionFuncionalIndex />} />
       <Route path="catalogos/presupuestales/clasificacionFuncional/create" element={<ClasificacionFuncionalCreate />} />
-      <Route path="catalogos/presupuestales/clasificacionFuncional/edit" element={<ClasificacionFuncionalEdit />} />
+      <Route path="catalogos/presupuestales/clasificacionFuncional/edit/:id" element={<ClasificacionFuncionalEdit />} />
       
       {/* Fuente Finanziamiento */}
       <Route path="catalogos/presupuestales/FuenteFinanciamiento" element={<FuenteFinanciamientoIndex />} />
       <Route path="catalogos/presupuestales/FuenteFinanciamiento/create" element={<FuenteFinanciamientoCreate />} />
-      <Route path="catalogos/presupuestales/FuenteFinanciamiento/edit" element={<FuenteFinanciamientoEdit />} />
+      <Route path="catalogos/presupuestales/FuenteFinanciamiento/edit/:id" element={<FuenteFinanciamientoEdit />} />
       
       {/* Bienes y Servicios */}
       <Route path="catalogos/presupuestales/BienesServicios" element={<BienesServicisoIndex />} />
       <Route path="catalogos/presupuestales/BienesServicios/create" element={<BienesServicisoCreate />} />
-      <Route path="catalogos/presupuestales/BienesServicios/edit" element={<BienesServicisosEdit />} />
+      <Route path="catalogos/presupuestales/BienesServicios/edit/:id" element={<BienesServicisosEdit />} />
     </Routes>
   );
 }

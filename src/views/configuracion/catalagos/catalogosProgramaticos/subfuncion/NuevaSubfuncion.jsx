@@ -1,49 +1,64 @@
-import React from 'react'
-import Titulo from '../../../../../components/Titulo'
-import Breadcrumb from '../../../../../components/Breadcrumb'
-import { Link } from 'react-router-dom'
-import FormSubfumcion from '../../../../../components/configuracion/catalogosProgramaticos/FormSubfumcion'
+import React from "react";
+import Titulo from "../../../../../components/Titulo";
+import Breadcrumb from "../../../../../components/Breadcrumb";
+import { Link, Navigate, useParams } from "react-router-dom";
+import FormSubfuncion from "../../../../../components/configuracion/catalogosProgramaticos/FormSubfuncion";
+import { useQuery } from "@tanstack/react-query";
+import Spinner from "../../../../../components/Spinner";
+import { getSubfuncion } from "../../../../../api/configuracion/ApiSubfuncion";
+import { getFunciones } from "../../../../../api/configuracion/ApiFuncion";
 
 const NuevaSubfuncion = () => {
-    return (
-        <>
-            <Breadcrumb
-                items={[
-                    { href: "/home", text: "CONFIGURACIÓN" },
-                    { href: "/home", text: "CATÁLAGOS" },
-                    { href: "/home", text: "CATÁLAGOS PROGRAMÁTICOS" },
-                    { href: "/home", text: "REGISTRO DE SUBFUNCIONES" },
-                    { text: "SUBFUNCIÓN" },
-                ]}
-            />
+  const params = useParams();
+  const param = !!params.id;
 
-            <Titulo text="SUBFUNCIÓN" className='mt-14' />
+  const { data, isLoading, isError, fetchStatus } = useQuery({
+    queryKey: ["getSubfuncion", params.id],
+    queryFn: getSubfuncion,
+    enabled: param,
+    retry: false,
+  });
+  const {
+    data: dataF,
+    isLoading: isLoadingF,
+    isError: isErrorF,
+  } = useQuery({
+    queryKey: ["getFunciones", "Activo"],
+    queryFn: getFunciones,
+  });
 
-            <div className="flex flex-col w-full h-full mt-20 text-gray-700 bg-white shadow-md rounded-lg bg-clip-border mb-20">
-                <div className="bg-customRed2 rounded p-2">
-                    <h3 className="text-white font-bold">FUNCIÓN</h3>
-                </div>
+  if (isLoadingF || isLoading || fetchStatus == "fetching") return <Spinner />;
+  if (isError || isErrorF) return <Navigate to="/404" />;
+  return (
+    <>
+      <Breadcrumb
+        items={[
+          { href: `${param?'../':''}../../../menu`, text: "CONFIGURACIÓN" },
+          { href: `${param?'../':''}../../../catalogos/menu`, text: "CATÁLAGOS" },
+          {
+            href: `${param?'../':''}../../../menu/catalogos/programaticos`,
+            text: "CATÁLAGOS PROGRAMÁTICOS",
+          },
+          { href: `${param?'../':''}../../../catalogos/programaticos/subfuncion`, text: "REGISTRO DE SUBFUNCIONES" },
+          { text: "SUBFUNCIÓN" },
+        ]}
+      />
 
-                <form className="flex flex-col p-4 space-y-2 bg-customRed2 mt-1">
+      <Titulo text="SUBFUNCIÓN" className="mt-14" />
 
-                    <FormSubfumcion />
+      <div className="flex flex-col w-full h-full mt-20 text-gray-700 rounded-lg bg-clip-border mb-20">
+        <div className="bg-customRed2 rounded p-2">
+          <h3 className="text-white font-bold">FUNCIÓN</h3>
+        </div>
 
-                    <div className="flex justify-end">
-                        <Link
-                            to="/configuracion/catalogos/programaticos/subfuncion"
-                            className="bg-customRed text-white px-4 py-2 rounded"
-                        >
-                            Regresar
-                        </Link>
+        <FormSubfuncion
+          defaultValues={data?.data}
+          update={param}
+          dataF={dataF}
+        />
+      </div>
+    </>
+  );
+};
 
-                        <button className="bg-customYellow text-white px-4 py-2 rounded ml-4">
-                            Guardar
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </>
-    )
-}
-
-export default NuevaSubfuncion
+export default NuevaSubfuncion;

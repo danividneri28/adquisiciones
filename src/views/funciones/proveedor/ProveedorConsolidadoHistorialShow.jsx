@@ -1,6 +1,7 @@
 import React from 'react'
 import Breadcrumb from '../../../components/Breadcrumb';
 import Titulo from '../../../components/Titulo';
+import Regresar from '../../../components/Regresar';
 
 const ProveedorConsolidadoHistorialShow = () => {
     return (
@@ -8,19 +9,14 @@ const ProveedorConsolidadoHistorialShow = () => {
             <div>
                 <Breadcrumb
                     items={[
-                        { href: "/funciones", text: "FUNCIONES" },
-                        { href: "/funciones/proveedor/listado", text: "REGISTROS DE PROVEEDORES Y CONTRATOS" },
-                        { href: "/funciones/proveedor/consolidados", text: "APARTADO DE CONSOLIDADOS" },
-                        { href: "/funciones/proveedor/consolidados/historial", text: "HISTORIAL DE CONSOLIDADOS" },
+                        { enlace: "/funciones", text: "FUNCIONES" },
+                        { enlace: "/funciones/proveedor/listado", text: "REGISTROS DE PROVEEDORES Y CONTRATOS" },
+                        { enlace: "/funciones/proveedor/consolidados", text: "APARTADO DE CONSOLIDADOS" },
+                        { enlace: "/funciones/proveedor/consolidados/historial", text: "HISTORIAL DE CONSOLIDADOS" },
                         { text: "REGISTRO DE CONSOLIDADOS" },
                     ]}
                 />
-                <a
-                    href="/funciones/proveedor/consolidados/historial/registros"
-                    className="block w-24 h-10 pl-2 mt-5 font-bold text-xl text-black cursor-pointer"
-                >
-                    REGRESAR
-                </a>
+                <Regresar enlace="/funciones/proveedor/consolidados/historial/registros" />
                 <div>
 
                 </div>

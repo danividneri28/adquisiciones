@@ -5,39 +5,42 @@ import NuevoCapitulo from "../../../../../../assets/images/configuracion/presupu
 import Titulo from "../../../../../../components/Titulo";
 import CustomTable from "../../../../../../components/CustomTable";
 import Regresar from "../../../../../../components/Regresar";
+import { getCapitulos } from "../../../../../../api/configuracion/capitulos/ApiCapitulos";
+import { useQuery } from "@tanstack/react-query";
+import Spinner from "../../../../../../components/Spinner";
 
 export default function CapituloIndex() {
   const columns = React.useMemo(
     () => [
       {
-        accessorKey: "Nombre",
+        accessorKey: "nombre_capitulo",
         label: "Nombre",
         filterFn: "equalsString",
       },
       {
-        accessorKey: "Codigo",
+        accessorKey: "codigo_capitulo",
         label: "Codigo",
         cell: (info) => info.getValue(),
         filterFn: "includesStringSensitive",
       },
       {
-        accessorKey: "Descripción",
+        accessorKey: "desc_capitulo",
         label: "Descripción",
         cell: (info) => info.getValue(),
         filterFn: "includesStringSensitive",
       },
       {
-        accessorKey: "Estado",
+        accessorKey: "estado",
         label: "Estado",
         cell: (info) => (
           <span
-            className={`px-2 py-1 rounded text-white 
-              ${ info.row.original.Estado === "Activa 0"
+            className={`px-6 py-2 rounded text-white align-middle 
+              ${ info.row.original.estado === "Activo"
                 ? "bg-customGreen"
                 : "bg-gray-400"
             }`}
           >
-            {info.row.original.Estado}
+            {info.row.original.estado}
           </span>
         ),
         filterFn: "includesStringSensitive",
@@ -48,8 +51,8 @@ export default function CapituloIndex() {
         cell: (info) => (
           <div>
             <Link
-              to={`/configuracion/catalogos/presupuestales/objetoGasto/capitulo/edit`}
-              className="bg-customRed text-white px-2 py-1 rounded"
+              to={`/configuracion/catalogos/presupuestales/objetoGasto/capitulo/edit/${info.row.original.id_capitulo}`}
+              className="bg-customRed text-white px-6 py-2 rounded"
             >
               Ver/Editar
             </Link>
@@ -61,19 +64,15 @@ export default function CapituloIndex() {
     []
   );
 
-  const data = React.useMemo(
-    () =>
-      Array.from({ length: 1000 }, (_, i) => ({
-        id: i,
-        Nombre: `Servicios Personales ${i}`,
-        Codigo: `100${i}`,
-        Descripcion: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum eligendi a, harum non aliquam maxime? Quibusdam tenetur rerum iure, unde odit aliquam, porro fugit architecto cum ex impedit molestias modi. ${i}`,
-        Estado: `Activa ${i}`,
-        Acciones: `Ver/Editar`,
-      })),
-    []
-  );
+  const { data, isLoading } = useQuery({
+    queryKey: ["getCapitulos"],
+    queryFn: getCapitulos,
+  });
 
+  // console.log(data.data);
+
+  if (isLoading) return <Spinner />;
+  if (data.success)
   return (
     <>
       <Breadcrumb
@@ -110,7 +109,7 @@ export default function CapituloIndex() {
             <h3 className="text-white font-bold">REGISTROS DE CAPITULOS</h3>
           </div>
 
-          <CustomTable columns={columns} data={data} />
+          <CustomTable columns={columns} data={data.data} />
         </div>
       </div>
     </>

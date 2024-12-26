@@ -5,6 +5,7 @@ import Titulo from "../../../components/Titulo";
 import CustomTable from "../../../components/CustomTable";
 import Apartadoconsolidados from "../../../assets/images/funciones/proveedorContrato/apartadoconsolidados.png";
 import Historial from "../../../assets/images/funciones/solicitudRequisicion/historial.png";
+import Regresar from "../../../components/Regresar";
 
 
 const ProveedorContratoIndex = () => {
@@ -107,12 +108,7 @@ const ProveedorContratoIndex = () => {
                     },
                 ]}
             />
-            <a
-                href="/home"
-                className="block w-24 h-10 pl-2 mt-5 font-bold text-xl text-black cursor-pointer"
-            >
-                REGRESAR
-            </a>
+            <Regresar enlace="/funciones"/>
             <Titulo text={"REGISTROS DE PROVEEDORES Y CONTRATOS"} />
             <div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 grid-rows-1 gap-6 mt-5">
@@ -129,7 +125,7 @@ const ProveedorContratoIndex = () => {
                         </Link>
                     </div>
                     <div className="col-start-1 col-span-2 lg:col-span-3">
-                        <div className="bg-gray-100 rounded-lg">
+                        <div className="bg-gray-100 border-gray-500 border-2 rounded-lg">
                             <form
                                 className="w-full p-6 rounded-lg"
                                 style={{ backgroundColor: "#ffffff" }}
@@ -139,56 +135,60 @@ const ProveedorContratoIndex = () => {
                                         <label className="block text-sm font-medium text-customRed">
                                             Año:
                                         </label>
-                                        <input
-                                            type=""
-                                            name="nombreArea"
-                                            className="mt-1 block w-full rounded-md border shadow-sm focus:ring-black focus:border-ring-black p-3 sm:text-sm"
-                                            readOnly
-                                        />
+                                        <select className="mt-1 block w-full rounded-md border focus:border-ring-black p-3 sm:text-sm">
+                                            <option value="">Seleccionar año</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2021">2021</option>
+                                        </select>
                                     </div>
                                     <div className="">
                                         <label className="block text-sm font-medium text-customRed">
                                             Mes:
                                         </label>
-                                        <input
-                                            type="text"
-                                            name="claveArea"
-                                            className="mt-1 block w-full rounded-md border shadow-sm focus:ring-black focus:border-ring-black p-3 sm:text-sm"
-                                            readOnly
-                                        />
+                                        <select className="mt-1 block w-full rounded-md border focus:border-ring-black p-3 sm:text-sm">
+                                            <option value="">Seleccionar mes</option>
+                                            <option value="1">Enero</option>
+                                            <option value="2">Febrero</option>
+                                            <option value="3">Marzo</option>
+                                            <option value="4">Abril</option>
+                                            <option value="5">Mayo</option>
+                                            <option value="6">Junio</option>
+                                            <option value="7">Julio</option>
+                                            <option value="8">Agosto</option>
+                                            <option value="9">Septiembre</option>
+                                            <option value="10">Octubre</option>
+                                            <option value="11">Noviembre</option>
+                                            <option value="12">Diciembre</option>
+                                        </select>
                                     </div>
                                     <div className="">
                                         <label className="block text-sm font-medium text-customRed">
                                             Área:
                                         </label>
-                                        <input
-                                            type="text"
-                                            name="claveArea"
-                                            className="mt-1 block w-full rounded-md border shadow-sm focus:ring-black focus:border-ring-black p-3 sm:text-sm"
-                                            readOnly
-                                        />
+                                        <select className="mt-1 block w-full rounded-md border focus:border-ring-black p-3 sm:text-sm">
+                                            <option value="">Seleccionar área</option>
+                                            <option value="1">Dirección de salud Pública</option>
+                                        </select>
                                     </div>
                                     <div className="">
                                         <label className="block text-sm font-medium text-customRed">
                                             Proveedor:
                                         </label>
-                                        <input
-                                            type="text"
-                                            name="claveArea"
-                                            className="mt-1 block w-full rounded-md border shadow-sm focus:ring-black focus:border-ring-black p-3 sm:text-sm"
-                                            readOnly
-                                        />
+                                        <select className="mt-1 block w-full rounded-md border focus:border-ring-black p-3 sm:text-sm">
+                                            <option value="">Seleccionar proveedor</option>
+                                            <option value="1">GOBTI S.A de C.V.</option>
+                                        </select>
                                     </div>
                                     <div className="">
                                         <label className="block text-sm font-medium text-customRed">
                                             Estado:
                                         </label>
-                                        <input
-                                            type="text"
-                                            name="claveArea"
-                                            className="mt-1 block w-full rounded-md border shadow-sm focus:ring-black focus:border-ring-black p-3 sm:text-sm"
-                                            readOnly
-                                        />
+                                        <select className="mt-1 block w-full rounded-md border focus:border-ring-black p-3 sm:text-sm">
+                                            <option value="">Seleccionar estado</option>
+                                            <option value="Autorizado">Autorizado</option>
+                                            <option value="Cancelado">Cancelado</option>
+                                        </select>
                                     </div>
                                     <div className="grid justify-items-center flex items-center">
                                     <button
